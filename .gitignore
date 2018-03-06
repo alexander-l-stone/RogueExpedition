@@ -1,0 +1,10 @@
+# Logs
+logs
+*.log
+*.txt
+
+# Optional eslint cache
+.eslintcache
+
+#python cache
+*.pyc
