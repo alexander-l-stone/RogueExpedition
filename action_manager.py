@@ -17,7 +17,9 @@ def attemptMove(ship, galaxy, dx, dy):
                     if (isinstance(planet, Planet)):
                         if (planet.x == ship.x+dx) and (planet.y == ship.y + dy):
                             successful_move = False
+                            ship.location.objlist.remove(ship)
                             ship.location = planet
+                            ship.location.objlist.append(ship)
                             entering_planet = True
                             if dx == -1 and dy == 0:
                                 ship.x = 1*ship.location.planet_limit.radius
@@ -148,7 +150,9 @@ def attemptMove(ship, galaxy, dx, dy):
                     else:
                         ship.x = ship.location.x + 1
                         ship.y = ship.location.y - 1
+                ship.location.objlist.remove(ship)
                 ship.location = ship.location.system
+                ship.location.objlist.append(ship)
                 return True
             else:
                 ship.move(dx, dy)
@@ -164,7 +168,9 @@ def attemptMove(ship, galaxy, dx, dy):
                     entering_system = True
                     if ship.player:
                         ship.ui.message("Entering " + system.name, 'helm')
+                    ship.location.objlist.remove(ship)
                     ship.location = system
+                    ship.location.objlist.append(ship)
                     has_wormhole = False
                     for sysobj in ship.location.system_objects:
                         if isinstance(sysobj, Wormhole):
@@ -310,7 +316,9 @@ def attemptJump(ship, clock):
                 else:
                     ship.x = ship.location.x + 1
                     ship.y = ship.location.y - 1
+            ship.location.objlist.remove(ship)
             ship.location = ship.location.sector
+            ship.location.objlist.append(ship)
         else:
             if ship.player:
                 ship.ui.message("Jump failed, too close to star", 'helm')
