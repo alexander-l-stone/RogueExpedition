@@ -323,7 +323,7 @@ class Game:
                         if action == 'menu':
                             self.game_state = 'menu'
                             self.current_menu = self.options_menu
-                            print(str(self.game_state))
+                            #(str(self.game_state))
                             self.fov_recompute = True
                         if action == 'where':
                             self.ui.message(str(self.player.ship.location), 'comms')
@@ -341,13 +341,14 @@ class Game:
                     if action == 'move':
                         pass
                     elif action == 'select':
-                        print("I got to the select action")
+                        #("I got to the select action")
                         option = self.current_menu.options[self.current_menu.current_option]
-                        print(option.name)
+                        #(option.name)
                         if option.name == 'blank':
                             pass
                         elif option.name == 'exit':
-                            print("I got to the exit action")
+                            #("I got to the exit action")
+                            # (main_game.current_menu.options)
                             self.current_menu.current_option = 0
                             self.current_menu = None
                             self.game_state = 'playing'
@@ -372,10 +373,10 @@ class Game:
                     return 'exit'
 #End of Game Class
 main_game = Game()
-print("I am before the menu")
+#("I am before the menu")
 main_game.game_state = 'main_menu'
 menu_result = main_game.main_menu_loop()
-print("I am after the menu")
+#("I am after the menu")
 if menu_result == 'new':
     main_game.generate_galaxy()
     main_game.generate_player_ship()

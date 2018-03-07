@@ -1,7 +1,7 @@
 #file for managing all the functions that govern actions
 from system import *
 from sector import Sector
-
+#
 def attemptMove(ship, galaxy, dx, dy):
     entering_planet = False
     if ship.location == None:
@@ -180,7 +180,8 @@ def attemptMove(ship, galaxy, dx, dy):
                             ship.ui.message("", 'helm')
                             ship.ui.message("I am detecting a gravitational anomaly.", 'science')
                         for msg in ship.ui.msgs:
-                            print(msg)
+                            pass
+                            #(msg)
                     if dx == -1 and dy == 0:
                         ship.x = 1*ship.location.hyperlimit.radius
                         ship.y = 0*ship.location.hyperlimit.radius

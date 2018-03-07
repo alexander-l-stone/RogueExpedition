@@ -1,5 +1,5 @@
 import tdl
-
+#
 class Menu:
 
     def __init__(self, menu_width, menu_height, options = []):
@@ -22,19 +22,19 @@ class Menu:
         for event in tdl.event.get():
             if event.type == 'KEYDOWN' and event.keychar != 'TEXT':
                 action = self.ACTION_KEYS.get(event.keychar, (0,0))
-                print(str(action))
+                #(str(action))
                 if action == 'up':
                     delta = -1
                 elif action == 'down':
                     delta = +1
-                print(delta)
+                #(delta)
                 self.current_option += delta
-                print(self.current_option)
+                #(self.current_option)
                 if self.current_option < 0:
                     self.current_option = 0
                 elif self.current_option > len(self.options)-1:
                     self.current_option = len(self.options)-1
-                print(self.current_option)
+                #(self.current_option)
                 return action
 
     def render_menu(self, sw, sh):
