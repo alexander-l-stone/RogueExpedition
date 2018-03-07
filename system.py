@@ -3,7 +3,7 @@ import math
 import random
 from random import *
 from display import GameObject
-
+#
 #Generate tag is legacy code
 class System:
     def __init__(self, name, x, y, generate=True, sector=None, owner=None):
@@ -528,15 +528,15 @@ class SystemGenerator:
             if num_planets > 2:
                 i = 3
                 while i < num_planets:
-                    #print("---")
-                    #print("Radius 1: " + str(radius1))
-                    #print("Radius 2: " + str(radius2))
-                    #print("I: " + str(i-2))
+                    ##("---")
+                    ##("Radius 1: " + str(radius1))
+                    ##("Radius 2: " + str(radius2))
+                    ##("I: " + str(i-2))
                     radius = radius2 - radius1
                     radius *= 2
                     radius *= i-2
                     radius += radius1
-                    #print("Radius: " + str(radius))
+                    ##("Radius: " + str(radius))
                     if len(zone) > radius and radius > 0:
                         planet_zone = zone[radius]
                     else:

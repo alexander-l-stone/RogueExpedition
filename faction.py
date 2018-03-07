@@ -1,5 +1,4 @@
 from system import *
-
 class Empire:
     def __init__(self, name, red, green, blue):
         self.name = name
