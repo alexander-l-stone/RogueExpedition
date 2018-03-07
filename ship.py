@@ -6,7 +6,7 @@ import math
 from component import *
 from galaxy import *
 from timer import Timer
-
+#
 class Ship(GameObject):
 
     def __init__(self, char, color, x, y, name, model, size, timer, ui=None, componentlist=None, system=None, isPlayer=False, faction=None):
@@ -350,7 +350,8 @@ class Ship(GameObject):
                                 self.ui.message("", 'helm')
                                 self.ui.message("I am detecting a gravitational anomaly.", 'science')
                             for msg in self.ui.msgs:
-                                print(msg)
+                                pass
+                                #(msg)
                         if dx == -1 and dy == 0:
                             self.x = 1*self.location.hyperlimit.radius
                             self.y = 0*self.location.hyperlimit.radius

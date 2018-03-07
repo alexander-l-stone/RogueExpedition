@@ -66,13 +66,17 @@ class Game:
         self.current_menu = None
         self.options_menu = Menu(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.main_menu = Menu(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
-        self.exit = Option('exit', "Exit")
-        self.new_game = Option('new', "New Game")
-        self.load_game = Option('blank', "Load Game")
-        self.main_menu.add_option(self.new_game)
-        self.main_menu.add_option(self.load_game)
-        self.main_menu.add_option(self.exit)
-        self.options_menu.add_option(self.exit)
+        exit = Option('exit', "Exit")
+        new_game = Option('new', "New Game")
+        load_game = Option('blank', "Load Game")
+        save_game = Option('blank', "Save Game")
+        options = Option('blank', "Options")
+        self.main_menu.add_option(new_game)
+        self.main_menu.add_option(load_game)
+        self.main_menu.add_option(exit)
+        self.options_menu.add_option(save_game)
+        self.options_menu.add_option(options)
+        self.options_menu.add_option(exit)
         self.main_window = tdl.init(self.SCREEN_WIDTH, self.SCREEN_HEIGHT, title="Space", fullscreen = False)
         self.fov_recompute = True
         self.game_state = 'playing'
@@ -319,7 +323,7 @@ class Game:
                         if action == 'menu':
                             self.game_state = 'menu'
                             self.current_menu = self.options_menu
-                            print(str(self.game_state))
+                            #(str(self.game_state))
                             self.fov_recompute = True
                         if action == 'where':
                             self.ui.message(str(self.player.ship.location), 'comms')
@@ -337,13 +341,14 @@ class Game:
                     if action == 'move':
                         pass
                     elif action == 'select':
-                        print("I got to the select action")
+                        #("I got to the select action")
                         option = self.current_menu.options[self.current_menu.current_option]
-                        print(option.name)
+                        #(option.name)
                         if option.name == 'blank':
                             pass
                         elif option.name == 'exit':
-                            print("I got to the exit action")
+                            #("I got to the exit action")
+                            # (main_game.current_menu.options)
                             self.current_menu.current_option = 0
                             self.current_menu = None
                             self.game_state = 'playing'
@@ -368,10 +373,10 @@ class Game:
                     return 'exit'
 #End of Game Class
 main_game = Game()
-print("I am before the menu")
+#("I am before the menu")
 main_game.game_state = 'main_menu'
 menu_result = main_game.main_menu_loop()
-print("I am after the menu")
+#("I am after the menu")
 if menu_result == 'new':
     main_game.generate_galaxy()
     main_game.generate_player_ship()
