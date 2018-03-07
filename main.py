@@ -166,6 +166,7 @@ class Game:
     def generate_player_ship(self):
         self.player_ship = Ship('e', (0,0,255), -1, -1, 'Korolev', 'Magellan', 30, self.clock, ui=self.ui, isPlayer=True)
         self.player_ship.location = self.start_planet
+        self.start_planet.objlist.append(self.player_ship)
         magellan_solar_1 = copy.copy(solar_panel_0)
         magellan_solar_2 = copy.copy(solar_panel_0)
         magellan_battery_1 = copy.copy(battery_1)
@@ -266,7 +267,7 @@ class Game:
                         if self.player.ship.get_thrust() <= 0:
                             self.ui.message("We have no working engines.", 'engineering')
                         else:
-                            if self.player.ship.attemptMove(self.milky_way, key_x, key_y):
+                            if attemptMove(self.player.ship, self.milky_way, key_x, key_y):
                                 x = False
                                 y = False
                                 time = 0
@@ -307,7 +308,7 @@ class Game:
                                 for drawy in range(0, self.SCREEN_HEIGHT):
                                     self.console.draw_char(drawx, drawy, ' ', bg=(0,0,0))
                         if action == 'jump':
-                            self.player.ship.attemptJump(self.clock)
+                            attemptJump(self.player.ship, self.clock)
                         if action == 'debug':
                             with open('debug.txt', 'a') as f:
                                 if isinstance(self.player.ship.location, System):
