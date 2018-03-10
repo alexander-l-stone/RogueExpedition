@@ -4,6 +4,7 @@ class Galaxy:
     def __init__(self):
         self.sectorlist = {}
         self.factions = []
+        #TODO: Add SystemGenerator here
 
     def add_sector(self, sector):
         self.sectorlist[(sector.x, sector.y)] = sector

@@ -1,9 +1,10 @@
 import random
 from random import *
 from system import *
-# Put generators here when import errors are resolved
+#FIXME: Put generators here when import errors are resolved
 class SystemGenerator:
     def __init__(self):
+        #TODO: Add and use a seed for the rng
         pass
 
     def generate(self, system):

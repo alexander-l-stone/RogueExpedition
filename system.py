@@ -18,6 +18,7 @@ class System:
         self.objlist = []
         self.sector = sector
         if generate:
+            #FIXME: Remove the below when this workaround is no longer needed
             sg = SystemGenerator()
             sg.generate(self)
 
@@ -322,8 +323,7 @@ class Wormhole(GameObject):
         random_angle = math.radians(randrange(0,360))
         self.radius = radius
         x = int(self.radius*math.cos(random_angle))
-        y = int(self.radius*math.sin(random_angle))
-        super(Wormhole, self).__init__(char, color, x, y)
+        GameObject.__init__(self, char, color, x, y)
         self.system = system
         if not self.system == None:
             self.system.system_objects.append(self)
