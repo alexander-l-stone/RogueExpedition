@@ -3,7 +3,7 @@ import math
 import random
 from random import *
 from display import GameObject
-#
+
 #Generate tag is legacy code
 class System:
     def __init__(self, name, x, y, generate=True, sector=None, owner=None):

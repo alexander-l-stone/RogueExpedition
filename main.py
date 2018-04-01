@@ -15,6 +15,8 @@ from faction import *
 import math
 from action_manager import *
 
+#TODO: Clean up this file and remove constants/import them from files
+
 class Game:
     def __init__(self):
         self.SCREEN_WIDTH = 110

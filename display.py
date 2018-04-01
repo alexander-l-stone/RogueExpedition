@@ -1,3 +1,4 @@
+#This is the basic object for drawing stuff on the screen
 class GameObject:
     def __init__(self, char, color, x, y):
         self.char = char
@@ -12,10 +13,6 @@ class GameObject:
     def clear(self, console, topx, topy, sw, sh, clearbg=None):
         if (self.x-topx > 0) and (self.y-topy > 0) and (self.x-topx < sw) and (self.y-topy < sh):
             console.draw_char(self.x-topx, self.y-topy, ' ', bg=clearbg)
-
-    def move(self, dx, dy):
-        self.x += dx
-        self.y += dy
 
     def to_json(self):
         char = self.char

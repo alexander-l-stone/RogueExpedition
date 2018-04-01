@@ -1,5 +1,5 @@
 from sector import *
-
+#TODO: add seed
 class Galaxy:
     def __init__(self):
         self.sectorlist = {}

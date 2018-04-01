@@ -1,5 +1,5 @@
 from system import *
-
+#This is the base class for all ship components. This is for TYPE of component, not individual components
 class Component:
     def __init__(self, name, charstring, size, active=True, damaged=False):
         self.name = name
@@ -37,13 +37,14 @@ class Component:
 
         component = Component(name, charstring, size, active=active, damaged=damaged)
         return component
-
+#Describes Sensors. Currently only stores sensor range. TODO: Add something to allow sensors to interact with ECM and Cloaks.
 class Sensor(Component):
     def __init__(self, name, charstring, size, sensor_range, power_cost, active=True, damaged=False):
         Component.__init__(self, name, charstring, size, active, damaged)
         self.sensor_range = sensor_range
         self.power_cost = power_cost
 
+    #Sensors draw in power for their use.
     def activate(self, ship, ui):
         if ship.current_power >= self.power_cost and self.active and not self.damaged:
             return ('sensor', self.power_cost)
