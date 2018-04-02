@@ -348,13 +348,13 @@ class Engine(Component):
 
     @staticmethod
     def from_json(json_data):
-        name : json_data.get('name')
-        active_state : json_data.get('active')
-        charstring : json_data.get('charstring')
-        damage_state : json_data.get('damaged')
-        size : json_data.get('size')
-        thrust : json_data.get('thrust')
-        power_cost : json_data.get('power_cost')
+        name = json_data.get('name')
+        active_state = json_data.get('active')
+        charstring = json_data.get('charstring')
+        damage_state = json_data.get('damaged')
+        size = json_data.get('size')
+        thrust = json_data.get('thrust')
+        power_cost = json_data.get('power_cost')
 
         engine = Engine(name, charstring, size, thrust, power_cost, active=active_state, damaged=damage_state)
         return engine
