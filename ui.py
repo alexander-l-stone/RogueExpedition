@@ -67,6 +67,11 @@ class Panel:
                 if len(self.msgs) >= self.msg_height*2:
                     del self.msgs[0]
                 self.msgs.append((line, (0,100,255)))
+        elif msg_type == 'debug':
+            for line in new_msg_lines:
+                if len(self.msgs) >= self.msg_height*2:
+                    del self.msgs[0]
+                self.msgs.append((line, (255,255,255)))
 
     def render_messages(self):
         y = 4

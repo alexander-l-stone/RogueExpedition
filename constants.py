@@ -1,5 +1,4 @@
-
-
+#TODO: Load everything here from files not hard code
 system_names = [
     'Centauri',
     'Orion',
@@ -104,6 +103,7 @@ system_names = [
     'Ulthar'
 ]
 
+#FIXME: Name generation needs to be better
 syllables = {
     0 : 'ab',
     1 : 'ad',

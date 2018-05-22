@@ -1,5 +1,5 @@
 from system import *
-
+#This is the base class for all ship components. This is for TYPE of component, not individual components
 class Component:
     def __init__(self, name, charstring, size, active=True, damaged=False):
         self.name = name
@@ -37,13 +37,14 @@ class Component:
 
         component = Component(name, charstring, size, active=active, damaged=damaged)
         return component
-
+#Describes Sensors. Currently only stores sensor range. TODO: Add something to allow sensors to interact with ECM and Cloaks.
 class Sensor(Component):
     def __init__(self, name, charstring, size, sensor_range, power_cost, active=True, damaged=False):
-        super(Sensor, self).__init__(name, charstring, size, active, damaged)
+        Component.__init__(self, name, charstring, size, active, damaged)
         self.sensor_range = sensor_range
         self.power_cost = power_cost
 
+    #Sensors draw in power for their use.
     def activate(self, ship, ui):
         if ship.current_power >= self.power_cost and self.active and not self.damaged:
             return ('sensor', self.power_cost)
@@ -94,7 +95,7 @@ class Sensor(Component):
 
 class CargoBay(Component):
     def __init__(self, name, charstring, size, cargo_amount, active=True, damaged=False):
-        super(CargoBay, self).__init__(name, charstring, size, active, damaged)
+        Component.__init__(self, name, charstring, size, active, damaged)
         self.cargo_amount = cargo_amount
 
     def activate(self, ship, ui):
@@ -133,7 +134,7 @@ class CargoBay(Component):
 
 class Capacitor(Component):
     def __init__(self, name, charstring, size, power_amount, active=True, damaged=False):
-        super(Capacitor, self).__init__(name, charstring, size, active, damaged)
+        Component.__init__(self, name, charstring, size, active, damaged)
         self.power_amount = power_amount
 
     def active(self, ship, ui):
@@ -172,7 +173,7 @@ class Capacitor(Component):
 
 class Reactor(Component):
     def __init__(self, name, charstring, size, fuel_type, fuel_cost, power_produced, max_tank, active=True, damaged=False):
-        super(Reactor, self).__init__(name, charstring, size, active, damaged)
+        Component.__init__(self, name, charstring, size, active, damaged)
         self.fuel_type = fuel_type
         self.fuel_cost = fuel_cost
         self.power_produced = power_produced
@@ -258,7 +259,7 @@ class Reactor(Component):
 #Resources Harvested is a Dictionary, with the Key being the Resource, and the value being the amount of that Resource that is harvested
 class ResourceHarvester(Component):
     def __init__(self, name, charstring, size, resources_harvested, power_cost, active=False, damaged=False):
-        super(ResourceHarvester, self).__init__(name, charstring, size, active, damaged)
+        Component.__init__(self, name, charstring, size, active, damaged)
         self.resources_harvested = resources_harvested
         self.power_cost = power_cost
 
@@ -317,7 +318,7 @@ class ResourceHarvester(Component):
 
 class Engine(Component):
     def __init__(self, name, charstring, size, thrust, power_cost, active=True, damaged=False):
-        super(Engine, self).__init__(name, charstring, size, active, damaged)
+        Component.__init__(self, name, charstring, size, active, damaged)
         self.thrust = thrust
         self.power_cost = power_cost
 
@@ -347,13 +348,13 @@ class Engine(Component):
 
     @staticmethod
     def from_json(json_data):
-        name : json_data.get('name')
-        active_state : json_data.get('active')
-        charstring : json_data.get('charstring')
-        damage_state : json_data.get('damaged')
-        size : json_data.get('size')
-        thrust : json_data.get('thrust')
-        power_cost : json_data.get('power_cost')
+        name = json_data.get('name')
+        active_state = json_data.get('active')
+        charstring = json_data.get('charstring')
+        damage_state = json_data.get('damaged')
+        size = json_data.get('size')
+        thrust = json_data.get('thrust')
+        power_cost = json_data.get('power_cost')
 
         engine = Engine(name, charstring, size, thrust, power_cost, active=active_state, damaged=damage_state)
         return engine

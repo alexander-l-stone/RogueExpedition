@@ -1,3 +1,4 @@
+#TODO: Add more resources
 class Resource:
     def __init__(self, name, symbol):
         self.name = name

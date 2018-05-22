@@ -1,6 +1,8 @@
 from component import *
 from resource import *
 
+#TODO: Put this in an external file and load these from it
+
 fission_reactor_0 = Reactor("Primitive Fission Reactor", "FISN0", 12, Uranium, 1, 15, 100)
 fission_reactor_1 = Reactor("Early Fission Reactor", "FISN1", 10, Uranium, 1, 20, 100)
 fission_reactor_2 = Reactor("Fission Reactor", "FISN2", 10, Uranium, 1, 20, 200)

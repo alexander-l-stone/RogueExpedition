@@ -1,3 +1,4 @@
+#This is the basic object for moving and drawing game objects
 class GameObject:
     def __init__(self, char, color, x, y):
         self.char = char

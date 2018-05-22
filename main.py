@@ -15,6 +15,8 @@ from faction import *
 import math
 from action_manager import *
 
+#TODO: Clean up this file and remove constants/import them from files
+
 class Game:
     def __init__(self):
         self.SCREEN_WIDTH = 110
@@ -66,6 +68,7 @@ class Game:
         self.current_menu = None
         self.options_menu = Menu(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.main_menu = Menu(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+        #FIXME: The menu's are both broken in the same way. Each menu has the others menu's options in it. No idea what is causing it
         exit = Option('exit', "Exit")
         new_game = Option('new', "New Game")
         load_game = Option('blank', "Load Game")
@@ -83,6 +86,7 @@ class Game:
 
     def generate_galaxy(self):
 
+        #TODO: Load the initial system from a file instead of hard code
         Terra_Prime = System('Terra Prime', randrange(0,251), randrange(0,251), False)
         Terra_Prime_Star = Star('O', (255,255,50), 0, 0, 'Terra Prime', 'Yellow', 4)
         Terra_Prime.star = Terra_Prime_Star
@@ -164,6 +168,7 @@ class Game:
         self.milky_way.factions.append(Terran_Coalition)
 
     def generate_player_ship(self):
+        #TODO: Load the initial ship from a file instead of hard code
         self.player_ship = Ship('e', (0,0,255), -1, -1, 'Korolev', 'Magellan', 30, self.clock, ui=self.ui, isPlayer=True)
         self.player_ship.location = self.start_planet
         self.start_planet.objlist.append(self.player_ship)

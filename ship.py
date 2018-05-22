@@ -6,11 +6,11 @@ import math
 from component import *
 from galaxy import *
 from timer import Timer
-#
+#TODO: Move UI stuff to Player
 class Ship(GameObject):
 
     def __init__(self, char, color, x, y, name, model, size, timer, ui=None, componentlist=None, system=None, isPlayer=False, faction=None):
-        super(Ship, self).__init__(char, color, x, y)
+        GameObject.__init__(self, char, color, x, y)
         self.name = name
         self.model = model
         self.sensor_range = 1

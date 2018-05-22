@@ -54,4 +54,4 @@ class Timer:
         return math.floor(self.minutes/504000)
 
     def get_text(self):
-        return self.weekday_data[self.get_weekday()] + ", " + str(self.get_day() + 1) + self.day_ending[self.get_day()] + " of " + self.month_data[self.get_month()] + " " + str(self.get_year()) + " A.C."
+        return self.weekday_data[self.get_weekday()] + ", " + str(int(self.get_day() + 1)) + self.day_ending[self.get_day()] + " of " + self.month_data[self.get_month()] + " " + str(int(self.get_year())) + " A.C."
