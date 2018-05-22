@@ -23,6 +23,7 @@ def attemptMove(ship, galaxy, dx, dy):
 def systemMove(ship, galaxy, dx, dy):
     #Assumes that the ship's move was successful
     successful_move = True
+    entering_planet = False
     #You cannot move into Stars
     if (ship.location.star.x == ship.x+dx) and (ship.location.star.y == ship.y+dy):
         successful_move = False
@@ -116,7 +117,7 @@ def planetMove(ship, galaxy, dx, dy):
                         successful_move = False
     #If you can move, move, if you move beyond the planet limit, return to the system view
     if successful_move:
-        distance_from_planet = math.pow((math.pow(ship.x, 2)) + (math.pow(ship.y, 2)), 1/2)
+        distance_from_planet = math.pow((math.pow(ship.x, 2)) + (math.pow(ship.y, 2)), 1/2.0)
         if distance_from_planet >= ship.location.planet_limit.radius + 1:
             #math governing where in the system view you return too
             if ship.x > 0 and ship.y == 0:
@@ -258,28 +259,44 @@ def sectorMove(ship, galaxy, dx, dy):
         greaterthanx = ship.x > (ship.location.x+1)*ship.location.width-1
         greaterthany = ship.y > (ship.location.y+1)*ship.location.height-1
         if lessthanx and lessthany:
+            ship.location.objlist.remove(ship)
             ship.location = galaxy.get_sector(ship.location, -1, -1)
+            ship.location.objlist.append(ship)
             return True
         elif lessthanx and greaterthany:
+            ship.location.objlist.remove(ship)
             ship.location = galaxy.get_sector(ship.location, -1, 1)
+            ship.location.objlist.append(ship)
             return True
         elif greaterthanx and lessthany:
+            ship.location.objlist.remove(ship)
             ship.location = galaxy.get_sector(ship.location, 1, -1)
+            ship.location.objlist.append(ship)
             return True
         elif greaterthanx and greaterthany:
+            ship.location.objlist.remove(ship)
             ship.location = galaxy.get_sector(ship.location, 1, 1)
+            ship.location.objlist.append(ship)
             return True
         elif greaterthanx and not lessthany and not greaterthany:
+            ship.location.objlist.remove(ship)
             ship.location = galaxy.get_sector(ship.location, 1, 0)
+            ship.location.objlist.append(ship)
             return True
         elif lessthanx and not lessthany and not greaterthany:
+            ship.location.objlist.remove(ship)
             ship.location = galaxy.get_sector(ship.location, -1, 0)
+            ship.location.objlist.append(ship)
             return True
         elif greaterthany and not lessthanx and not greaterthanx:
+            ship.location.objlist.remove(ship)
             ship.location = galaxy.get_sector(ship.location, 0, 1)
+            ship.location.objlist.append(ship)
             return True
         elif lessthany and not lessthanx and not greaterthanx:
+            ship.location.objlist.remove(ship)
             ship.location = galaxy.get_sector(ship.location, 0, -1)
+            ship.location.objlist.append(ship)
             return True
         return True
     else:
@@ -297,7 +314,7 @@ def attemptJump(ship, clock):
             return False
     else:
         #You cannot jump if you are within a planets hyperlimit
-        distance_from_star = math.pow((math.pow(ship.x, 2)) + (math.pow(ship.y, 2)), 1/2)
+        distance_from_star = math.pow((math.pow(ship.x, 2)) + (math.pow(ship.y, 2)), 1/2.0)
         if distance_from_star >= ship.location.hyperlimit.radius:
             #if we do jump, tell them we are jumping
             if ship.player:
