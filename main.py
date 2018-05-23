@@ -58,7 +58,7 @@ class Game:
             'w' : 'where',
             'W' : 'where'
             }
-# Y is down, X is Right
+        #Y is down, X is Right
         self.CENTERX = self.SCREEN_WIDTH//2
         self.CENTERY = self.SCREEN_HEIGHT//2
         self.system_names = {}
@@ -77,9 +77,20 @@ class Game:
         self.main_menu.add_option(new_game)
         self.main_menu.add_option(load_game)
         self.main_menu.add_option(exit)
+        self.options_menu.options = []
         self.options_menu.add_option(save_game)
         self.options_menu.add_option(options)
         self.options_menu.add_option(exit)
+        # with open('menu.log', 'a') as f:
+        #     f.write("---\n")
+        #     f.write("Main Menu Contents: \n")
+        #     for option in self.main_menu.options:
+        #         f.write(option.name + "\n")
+        #     f.write("Options Menu Contents: \n")
+        #     for option in self.options_menu.options:
+        #         f.write(option.name + "\n")
+        #     f.write(str(self.main_menu == self.options_menu))
+        #     f.closed
         self.main_window = tdl.init(self.SCREEN_WIDTH, self.SCREEN_HEIGHT, title="Space", fullscreen = False)
         self.fov_recompute = True
         self.game_state = 'playing'
@@ -329,6 +340,11 @@ class Game:
                         if action == 'menu':
                             self.game_state = 'menu'
                             self.current_menu = self.options_menu
+                            with open('menu.log', 'a') as f:
+                                f.write("---\n")
+                                f.write("Game Menu Contents: \n")
+                                for option in self.current_menu.options:
+                                    f.write(option.name + "\n")
                             #(str(self.game_state))
                             self.fov_recompute = True
                         if action == 'where':

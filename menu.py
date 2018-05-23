@@ -1,4 +1,5 @@
 import tdl
+import copy
 #
 class Menu:
 
@@ -15,7 +16,7 @@ class Menu:
         self.HIGHLIGHT_COLOR= (255,255,0)
 
     def add_option(self, new_option):
-        self.options.append(new_option)
+        self.options.append(copy.deepcopy(new_option))
 
     def detect_events(self):
         delta = 0
