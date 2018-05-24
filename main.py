@@ -14,6 +14,7 @@ from menu import *
 from faction import *
 import math
 from action_manager import *
+import json
 
 #TODO: Clean up this file and remove constants/import them from files
 
@@ -71,13 +72,12 @@ class Game:
         #FIXME: The menu's are both broken in the same way. Each menu has the others menu's options in it. No idea what is causing it
         exit = Option('exit', "Exit")
         new_game = Option('new', "New Game")
-        load_game = Option('blank', "Load Game")
-        save_game = Option('blank', "Save Game")
+        load_game = Option('load', "Load Game")
+        save_game = Option('save', "Save Game")
         options = Option('blank', "Options")
         self.main_menu.add_option(new_game)
         self.main_menu.add_option(load_game)
         self.main_menu.add_option(exit)
-        self.options_menu.options = []
         self.options_menu.add_option(save_game)
         self.options_menu.add_option(options)
         self.options_menu.add_option(exit)
@@ -368,6 +368,11 @@ class Game:
                         #(option.name)
                         if option.name == 'blank':
                             pass
+                        elif option.name == 'save':
+                            self.save_game()
+                            self.current_menu.current_option = 0
+                            self.current_menu = None
+                            self.game_state = 'playing'
                         elif option.name == 'exit':
                             #("I got to the exit action")
                             # (main_game.current_menu.options)
@@ -390,9 +395,35 @@ class Game:
                 elif option.name == 'new':
                     self.game_state = 'playing'
                     return 'new'
+                elif option.name == 'load':
+                    self.load_test()
+                    return 'load'
                 elif option.name == 'exit':
                     self.game_state = 'exit'
                     return 'exit'
+
+    def save_game(self):
+        data = {
+            'galaxy' : self.milky_way.to_json(),
+            'player' : self.player.to_json()
+            }
+        with open('save_game.json', 'w') as save_file:
+            json.dump(data, save_file, indent=4)
+
+    def load_game(self):
+        with open('save_game.json') as save_file:
+            data = json.load(save_file)
+        self.milky_way = Galaxy.from_json(data['galaxy'])
+        self.game_state = 'playing'
+
+    def load_test(self):
+        with open('test_system.json') as test_file:
+            data = json.load(test_file)
+        test_system = System.from_json(data)
+        with open('test_save.json', 'w') as save_file:
+            data = test_system.to_json()
+            json.dump(data, save_file, indent=4)
+
 #End of Game Class
 main_game = Game()
 #("I am before the menu")

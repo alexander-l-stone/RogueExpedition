@@ -2,6 +2,7 @@
 logs
 *.log
 *.txt
+*.json
 
 # Optional eslint cache
 .eslintcache

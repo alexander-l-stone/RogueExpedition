@@ -55,3 +55,13 @@ class Timer:
 
     def get_text(self):
         return self.weekday_data[self.get_weekday()] + ", " + str(int(self.get_day() + 1)) + self.day_ending[self.get_day()] + " of " + self.month_data[self.get_month()] + " " + str(int(self.get_year())) + " A.C."
+
+    def to_json(self):
+        json_data = {
+            'minutes' : self.minutes
+        }
+
+    @staticmethod
+    def from_json(json_data):
+        timer = Timer(json_data['minutes'])
+        return timer

@@ -1,4 +1,5 @@
 from sector import *
+import copy
 #TODO: add seed
 class Galaxy:
     def __init__(self):
@@ -33,15 +34,16 @@ class Galaxy:
 
     def to_json(self):
         sectorlist = []
-        for key,val in self.sectorlist:
-            sectorlist.append(val.to_json)
+        for val in self.sectorlist.values():
+            sectorlist.append(val.to_json())
         factionlist = []
         for faction in self.factions:
-            factionlist.append(faction)
+            factionlist.append(faction.name)
         json_data = {
             'sectorlist' : sectorlist,
             'factionlist' : factionlist
         }
+        return json_data
 
     @staticmethod
     def from_json(json_data):

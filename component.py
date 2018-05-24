@@ -218,7 +218,7 @@ class Reactor(Component):
         char = self.char
         damaged = self.damaged
         size = self.size
-        fuel_type = self.fuel_type
+        fuel_type = self.fuel_type.to_json()
         fuel_cost = self.fuel_cost
         power_produced = self.power_produced
         max_tank = self.max_tank
@@ -299,7 +299,7 @@ class ResourceHarvester(Component):
             'charstring' : self.char,
             'damaged' : self.damaged,
             'size' : self.size,
-            'resources_harvested' : self.resources_harvested,
+            'resources_harvested' : self.resources_harvested.to_json(),
             'power_cost' : self.power_cost
         }
 

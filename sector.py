@@ -67,6 +67,9 @@ class Sector:
                     self.systemlist.append(new_system)
                 i += 1
 
+    def generate_name():
+        listLength = len(syllables)
+
     def draw(self, console, topx, topy, sw, sh):
         for system in self.systemlist:
             if (system.x-topx > 0) and (system.y-topy > 0) and (system.x-topx < sw) and (system.y-topy < sh):
@@ -96,6 +99,7 @@ class Sector:
         sector_type = self.sector_type
         sysnames = self.sysnames
         systemlist = []
+        objlist = []
         for system in self.systemlist:
             systemlist.append(system.to_json())
         for obj in self.objlist:

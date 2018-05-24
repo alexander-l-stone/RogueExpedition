@@ -112,8 +112,11 @@ class Ship(GameObject):
         color = self.color
         model = self.model
         cargolist = []
-        for key,val in self.cargo_list:
-            new_cargo = key.to_json
+        for key,val in self.cargo_list.items():
+            with open('json.log', 'a') as f:
+                f.write("---\n")
+                f.write("Resource: " + key + " \n")
+            new_cargo = key.to_json()
             cargolist.append((new_cargo, val))
         size = self.size
         componentlist = []

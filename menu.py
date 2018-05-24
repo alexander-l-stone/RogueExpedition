@@ -3,8 +3,8 @@ import copy
 #
 class Menu:
 
-    def __init__(self, menu_width, menu_height, options = []):
-        self.options = options
+    def __init__(self, menu_width, menu_height):
+        self.options = []
         self.console = tdl.Console(menu_width, menu_height)
         self.current_option = 0
         self.ACTION_KEYS = {

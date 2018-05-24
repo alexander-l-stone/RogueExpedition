@@ -52,7 +52,10 @@ class System:
         name = self.name
         x = self.x
         y = self.y
-        sector = self.sector.name
+        if not isinstance(self.sector, str):
+            sector = self.sector
+        else:
+            sector = self.sector.name
         if self.owner == None:
             owner = None
         else:
@@ -97,8 +100,10 @@ class System:
         planetlist = json_data.get('planetlist')
         systemlist = json_data.get('systemlist')
         objectlist = json_data.get('objectlist')
+        star = json_data.get('star')
 
         system = System(name, x, y, generate=False, sector=sector, owner=owner)
+        system.star = Star.from_json(star)
         for planet in planetlist:
             new_planet = Planet.from_json(planet)
             new_planet.system = system
@@ -111,6 +116,7 @@ class System:
             if obj_data.get('type') == 'ship':
                 new_ship = Ship.from_json(obj_data)
                 system.objlist.append(obj_data)
+        system.hyperlimit = Ring.from_json(hyperlimit)
         return system
 
 class Star(GameObject):
@@ -220,14 +226,20 @@ class Planet(GameObject):
             colony = None
         else:
             colony = self.colony.to_json()
-        system = self.system.name
+        if not self.system == None:
+            system = self.system.name
+        else:
+            system = None;
         moonlist = []
         for moon in self.moonlist:
             moonlist.append(moon.to_json())
-        planet_limit = self.planet_limit.to_json
+        if self.planet_limit:
+            planet_limit = self.planet_limit.to_json()
+        else:
+            planet_limit = None
         objectlist = []
         for obj in self.objlist:
-            objectlist.append(obj)
+            objectlist.append(obj.to_json())
         json_data = {
             'name' : name,
             'radius' : radius,
@@ -248,6 +260,7 @@ class Planet(GameObject):
     def from_json(json_data):
         name = json_data.get('name')
         radius = json_data.get('radius')
+        color = json_data.get('color')
         char = json_data.get('char')
         x = json_data.get('x')
         y = json_data.get('y')
@@ -258,8 +271,13 @@ class Planet(GameObject):
         planet_limit = json_data.get('planet_limit')
         owner = json_data.get('owner')
         objectlist = json_data.get('objectlist')
+        system = json_data.get('system')
 
         planet = Planet(char, color, radius, x, y, planet_type, name, moonlist=None, system=system, owner=owner)
+        with open('test.log', 'a') as test_log:
+            test_log.write('----\n')
+            test_log.write(str(planet_limit))
+            test_log.closed
         for moon in moonlist:
             new_moon = Planet.from_json(moon)
             new_moon.system = planet
@@ -268,6 +286,15 @@ class Planet(GameObject):
             if obj_data.get('type') == 'ship':
                 new_ship = Ship.from_json(obj_data)
                 planet.objlist.append(new_ship)
+        if planet_limit:
+            planet.planet_limit = Ring.from_json(planet_limit)
+        else:
+            planet.planet_limit = None
+        with open('test.log', 'a') as test_log:
+            test_log.write('----\n')
+            test_log.write(planet.name + "\n")
+            test_log.write(str(planet.planet_limit) + "\n")
+            test_log.closed
         return planet
 
 class Ring:
@@ -307,12 +334,12 @@ class Ring:
 
     @staticmethod
     def from_json(json_data):
-        char = json_data.get(char)
-        name = json_data.get(name)
-        color = json_data.get(color)
-        radius = json_data.get(radius)
-        planet_type = json_data.get(planet_type)
-        explored = json_data.get(explored)
+        char = json_data.get('char')
+        name = json_data.get('name')
+        color = json_data.get('color')
+        radius = json_data.get('radius')
+        planet_type = json_data.get('planet_type')
+        explored = json_data.get('explored')
 
         ring = Ring(char, color, radius, planet_type, name)
         ring.explored = explored
