@@ -53,9 +53,9 @@ class System:
         x = self.x
         y = self.y
         if not isinstance(self.sector, str):
-            sector = self.sector
-        else:
             sector = self.sector.name
+        else:
+            sector = self.sector
         if self.owner == None:
             owner = None
         else:
@@ -90,6 +90,8 @@ class System:
 
     @staticmethod
     def from_json(json_data):
+        from ship import Ship
+
         name = json_data.get('name')
         x = json_data.get('x')
         y = json_data.get('y')
@@ -105,7 +107,10 @@ class System:
         system = System(name, x, y, generate=False, sector=sector, owner=owner)
         system.star = Star.from_json(star)
         for planet in planetlist:
-            new_planet = Planet.from_json(planet)
+            if planet['object_type'] == 'planet':
+                new_planet = Planet.from_json(planet)
+            else:
+                new_planet = Ring.from_json(planet)
             new_planet.system = system
             system.planetlist.append(new_planet)
         for sysobj_data in systemlist:
@@ -252,12 +257,14 @@ class Planet(GameObject):
             'moonlist' : moonlist,
             'colony' : colony,
             'planet_limit' : planet_limit,
-            'objectlist' : objectlist
+            'objectlist' : objectlist,
+            'object_type' : 'planet'
         }
         return json_data
 
     @staticmethod
     def from_json(json_data):
+        from ship import Ship
         name = json_data.get('name')
         radius = json_data.get('radius')
         color = json_data.get('color')
@@ -273,15 +280,18 @@ class Planet(GameObject):
         objectlist = json_data.get('objectlist')
         system = json_data.get('system')
 
-        planet = Planet(char, color, radius, x, y, planet_type, name, moonlist=None, system=system, owner=owner)
-        with open('test.log', 'a') as test_log:
-            test_log.write('----\n')
-            test_log.write(str(planet_limit))
-            test_log.closed
+        planet = Planet(char, color, radius, x, y, planet_type, name, moonlist=[], system=system, owner=owner)
+        if moonlist == None:
+            with open('test.log', 'a') as test_log:
+                test_log.write(planet.name + '\n')
+                test_log.write('Moonlist is None\n')
         for moon in moonlist:
-            new_moon = Planet.from_json(moon)
-            new_moon.system = planet
-            planet.moonlist.append(new_moon)
+            if moon['planet_type'] == 'planet':
+                new_moon = Planet.from_json(moon)
+            else:
+                new_moon = Ring.from_json(moon)
+                new_moon.system = planet
+                planet.moonlist.append(new_moon)
         for obj_data in objectlist:
             if obj_data.get('type') == 'ship':
                 new_ship = Ship.from_json(obj_data)
@@ -290,11 +300,6 @@ class Planet(GameObject):
             planet.planet_limit = Ring.from_json(planet_limit)
         else:
             planet.planet_limit = None
-        with open('test.log', 'a') as test_log:
-            test_log.write('----\n')
-            test_log.write(planet.name + "\n")
-            test_log.write(str(planet.planet_limit) + "\n")
-            test_log.closed
         return planet
 
 class Ring:
@@ -328,7 +333,8 @@ class Ring:
         'color' : self.color,
         'radius' : self.radius,
         'planet_type' : self.planet_type,
-        'explored' : self.explored
+        'explored' : self.explored,
+        'object_type' : 'ring'
         }
         return json_data
 
@@ -457,7 +463,7 @@ class SystemGenerator:
         else:
             last = len(system.planetlist) - 1
             hyperradius = max(5*system.star.mass, system.planetlist[last].radius + 2*system.star.mass)
-        system.hyperlimit = Ring('#', (50,0,0), hyperradius, 'hyperradius', system.name + ' Hyperlimit')
+        system.hyperlimit = Ring('#', (255,100,100), hyperradius, 'hyperradius', system.name + ' Hyperlimit')
 
     def generate_star(self, system):
         dieroll = randrange(0,100)

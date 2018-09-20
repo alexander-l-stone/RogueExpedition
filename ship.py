@@ -1,10 +1,9 @@
 import tdl
 from display import GameObject
-from system import *
+from system import System, Planet
 from sector import Sector
 import math
 from component import *
-from galaxy import *
 from timer import Timer
 #TODO: Move UI stuff to Player
 class Ship(GameObject):
@@ -164,9 +163,30 @@ class Ship(GameObject):
         clock = json_data.get('clock')
         faction = json_data.get('faction')
 
-        ship = Ship(char, color, x, y, name, model, size, clock, ui=None, componentlist=componentlist, isPlayer=player, faction=faction)
+        newComponentList = []
+        for component in componentlist:
+            newComponent = Ship.component_from_json(component)
+            newComponentList.append(newComponent)
+
+        ship = Ship(char, color, x, y, name, model, size, Timer.from_json(clock), ui=None, componentlist=newComponentList, isPlayer=player, faction=faction)
         ship.location = location
         ship.alert = alert
         for cargo in cargolist:
             ship.cargolist[cargo[0]] = cargo[1]
         return ship
+
+    @staticmethod
+    def component_from_json(json_data):
+        with open('test.log', 'a') as f:
+            f.write('\n')
+            f.write(str(json_data) + '\n')
+            f.closed
+        return {
+            'component' : Component.from_json(json_data),
+            'sensor' : Sensor.from_json(json_data),
+            'cargo' : CargoBay.from_json(json_data),
+            'capacitor' : Capacitor.from_json(json_data),
+            'reactor' : Reactor.from_json(json_data),
+            'harvester' : ResourceHarvester.from_json(json_data),
+            'engine' : Engine.from_json(json_data)
+        }.get(json_data['type'])

@@ -154,7 +154,7 @@ class Game:
         Ymir.moonlist.append(The_Wall)
         Terra_Prime.planetlist.append(Ymir)
         Ymir.system = Terra_Prime
-        Terra_Prime.hyperlimit = Ring('#', (50,0,0), 294, 'Hyperlimit', 'Terra Prime Hyperlimit')
+        Terra_Prime.hyperlimit = Ring('#', (255,100,100), 294, 'Hyperlimit', 'Terra Prime Hyperlimit')
         #Test_Wormhole = Wormhole('X', (200,66, 244), 250, Terra_Prime)
         #Test_Wormhole.x = 191
         #Test_Wormhole.y = 161
@@ -327,6 +327,7 @@ class Game:
                             attemptJump(self.player.ship, self.clock)
                         if action == 'debug':
                             with open('debug.txt', 'a') as f:
+                                f.write(self.player.ship.location)
                                 if isinstance(self.player.ship.location, System):
                                     f.write("---\n")
                                     f.write(self.player.ship.location.name + ": \n")
@@ -417,11 +418,48 @@ class Game:
         self.game_state = 'playing'
 
     def load_test(self):
-        with open('test_system.json') as test_file:
+        with open('save_game.json') as test_file:
             data = json.load(test_file)
-        test_system = System.from_json(data)
+        test_galaxy = Galaxy.from_json(data['galaxy'])
+        #load factions
+        for faction in test_galaxy.factions:
+            newSystemList = []
+            for system in faction.claimed_systems:
+                systemList = system.split(':')
+                sectorCoordList = systemList[0].split(',')
+                sectorX = sectorCoordList[0]
+                sectorY = sectorCoordList[1]
+                sectorX = int(sectorX)
+                sectorY = int(sectorY)
+                systemName = sectorCoordList[1]
+                sectorCoord = (sectorX, sectorY)
+                actualSector = test_galaxy.sectorlist[sectorCoord]
+                for actualSystem in actualSector.systemlist:
+                    if actualSystem.name == systemName:
+                        newSystemList.append(actualSystem)
+                        break
+            faction.claimed_systems = newSystemList
+            with open('test.log', 'a') as f:
+                f.write(str(faction.claimed_systems) + '\n')
+                f.closed
+            newColonyList = []
+            for colony in faction.colonies:
+                colonyList = colony.planet.split(':')
+                systemName = colonyList[0]
+                colonyName = colonyList[1]
+                found = False
+                for factionSystem in faction.claimed_systems:
+                    if factionSystem.name == system_name:
+                        for planet in factionSystem.planetlist:
+                            if planet.name == colonyName:
+                                newColonyList.append(planet)
+                                found = True
+                                break
+                    if found:
+                        break
+            faction.colonies = newColonyList
         with open('test_save.json', 'w') as save_file:
-            data = test_system.to_json()
+            data = test_galaxy.to_json()
             json.dump(data, save_file, indent=4)
 
 #End of Game Class

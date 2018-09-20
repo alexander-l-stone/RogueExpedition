@@ -60,6 +60,7 @@ class Timer:
         json_data = {
             'minutes' : self.minutes
         }
+        return json_data
 
     @staticmethod
     def from_json(json_data):

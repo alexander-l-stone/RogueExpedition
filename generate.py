@@ -18,7 +18,7 @@ class SystemGenerator:
         else:
             last = len(system.planetlist) - 1
             hyperradius = max(5*system.star.mass, system.planetlist[last].radius + 2*system.star.mass)
-        system.hyperlimit = Ring('#', (50,0,0), hyperradius, 'hyperradius', system.name + ' Hyperlimit')
+        system.hyperlimit = Ring('#', (255,100,100), hyperradius, 'hyperradius', system.name + ' Hyperlimit')
 
     def generate_star(self, system):
         dieroll = randrange(0,100)

@@ -22,7 +22,8 @@ class Component:
             'active' : active,
             'charstring' : char,
             'damaged' : damaged,
-            'size' : size
+            'size' : size,
+            'type' : 'component'
         }
 
         return json_data
@@ -75,7 +76,8 @@ class Sensor(Component):
             'damaged' : self.damaged,
             'size' : self.size,
             'sensor_range' : self.sensor_range,
-            'power_cost' : self.power_cost
+            'power_cost' : self.power_cost,
+            'type' : 'sensor'
         }
 
         return json_data
@@ -90,7 +92,7 @@ class Sensor(Component):
         sensor_range = json_data.get('sensor_range')
         power_cost = json_data.get('power_cost')
 
-        component = Component(name, charstring, size, sensor_range, power_cost, active=active, damaged=damaged)
+        component = Sensor(name, charstring, size, sensor_range, power_cost, active=active, damaged=damaged)
         return component
 
 class CargoBay(Component):
@@ -115,7 +117,8 @@ class CargoBay(Component):
             'charstring' : char,
             'damaged' : damaged,
             'size' : size,
-            'cargo_amount' : cargo_amount
+            'cargo_amount' : cargo_amount,
+            'type' : 'cargo'
         }
 
         return json_data
@@ -129,7 +132,7 @@ class CargoBay(Component):
         size = json_data.get('size')
         cargo_amount = json_data.get('cargo_amount')
 
-        component = Component(name, charstring, size, cargo_amount, active=active, damaged=damaged)
+        component = CargoBay(name, charstring, size, cargo_amount, active=active, damaged=damaged)
         return component
 
 class Capacitor(Component):
@@ -154,7 +157,8 @@ class Capacitor(Component):
             'charstring' : char,
             'damaged' : damaged,
             'size' : size,
-            'power_amount' : power_amount
+            'power_amount' : power_amount,
+            'type' : 'capacitor'
         }
 
         return json_data
@@ -168,7 +172,7 @@ class Capacitor(Component):
         size = json_data.get('size')
         power_amount = json_data.get('power_amount')
 
-        component = Component(name, charstring, size, power_amount, active=active, damaged=damaged)
+        component = Capacitor(name, charstring, size, power_amount, active=active, damaged=damaged)
         return component
 
 class Reactor(Component):
@@ -234,7 +238,8 @@ class Reactor(Component):
             'fuel_cost' : fuel_cost,
             'power_produced' : power_produced,
             'max_tank' : max_tank,
-            'current_tank' : current_tank
+            'current_tank' : current_tank,
+            'type' : 'reactor'
         }
 
         return json_data
@@ -252,7 +257,7 @@ class Reactor(Component):
         max_tank = json_data.get('max_tank')
         current_tank = json_data.get('current_tank')
 
-        component = Component(name, charstring, size, fuel_type, fuel_cost, power_produced, max_tank, active=active, damaged=damaged)
+        component = Reactor(name, charstring, size, fuel_type, fuel_cost, power_produced, max_tank, active=active, damaged=damaged)
         component.current_tank = current_tank
         return component
 
@@ -300,7 +305,8 @@ class ResourceHarvester(Component):
             'damaged' : self.damaged,
             'size' : self.size,
             'resources_harvested' : self.resources_harvested.to_json(),
-            'power_cost' : self.power_cost
+            'power_cost' : self.power_cost,
+            'type' : 'harvester'
         }
 
         return json_data
@@ -311,9 +317,11 @@ class ResourceHarvester(Component):
         active = json_data.get('active')
         charstring = json_data.get('charstring')
         damaged = json_data.get('damaged')
+        resources_harvested = json_data.get('resources_harvested')
+        power_cost = json_data.get('power_cost')
         size = json_data.get('size')
 
-        component = Component(name, charstring, size, active=active, damaged=damaged)
+        component = ResourceHarvester(name, charstring, size, resources_harvested, power_cost, active=active, damaged=damaged)
         return component
 
 class Engine(Component):
@@ -341,7 +349,8 @@ class Engine(Component):
             'damaged' : self.damaged,
             'size' : self.size,
             'thrust' : self.thrust,
-            'power_cost' : self.power_cost
+            'power_cost' : self.power_cost,
+            'type' : 'engine'
         }
 
         return json_data

@@ -26,7 +26,7 @@ class Empire:
             colonylist.append(colony.to_json())
         systemlist = []
         for system in self.claimed_systems:
-            systemlist.append(system.name)
+            systemlist.append(str(system.sector.x) + ',' + str(system.sector.y) + ':' + system.name)
 
         json_data = {
             'name' : self.name,
@@ -40,15 +40,24 @@ class Empire:
 
     @staticmethod
     def from_json(json_data):
+        with open('test.log', 'a') as f:
+            f.write('\n')
+            f.write(str(json_data) + '\n')
+            f.closed
         name = json_data.get('name')
         red = json_data.get('red')
         green = json_data.get('green')
         blue = json_data.get('blue')
         colonylist = json_data.get('colonies')
         systemlist = json_data.get('systems')
-
+        with open('test.log', 'a') as f:
+            f.write('\n')
+            f.write(str(colonylist) + '\n')
+            f.closed
         empire = Empire(name, red, green, blue)
-        empire.colonies = colonylist
+        for colony in colonylist:
+            new_colony = Colony.from_json(colony)
+            empire.colonies.append(new_colony)
         empire.claimed_systems = systemlist
         return empire
 
@@ -75,9 +84,10 @@ class Colony:
         for building in self.buildings:
             pass #Buildings dont exist yet
             # buildinglist.append(building.to_json())
+        planet = self.planet.system.name + ':' + self.planet.name
 
         json_data = {
-            'planet' : self.planet.name,
+            'planet' : planet,
             'owner' : self.owner.name,
             'population' : self.population,
             'food' : self.food,
@@ -99,6 +109,10 @@ class Colony:
         industry = json_data.get('industry')
         buildinglist = json_data.get('buildinglist')
 
+        with open('test.log', 'a') as f:
+            f.write('\n')
+            f.write(str(owner) + '\n')
+            f.closed
         colony = Colony(planet, owner, population, food, minerals, energy)
         colony.buildings = buildinglist
 

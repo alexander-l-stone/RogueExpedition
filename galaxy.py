@@ -36,13 +36,15 @@ class Galaxy:
         sectorlist = []
         for val in self.sectorlist.values():
             sectorlist.append(val.to_json())
-        factionlist = []
+            factionlist = []
         for faction in self.factions:
-            factionlist.append(faction.name)
+            factionlist.append(faction.to_json())
         json_data = {
             'sectorlist' : sectorlist,
             'factionlist' : factionlist
         }
+        with open('test_summary.log', 'a') as n:
+            n.write('\n' + str(json_data['sectorlist']) +'\n')
         return json_data
 
     @staticmethod

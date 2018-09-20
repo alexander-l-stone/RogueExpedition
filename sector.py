@@ -1,5 +1,5 @@
 import tdl
-from system import *
+from system import System
 from random import *
 import math
 from constants import *
@@ -103,6 +103,10 @@ class Sector:
         for system in self.systemlist:
             systemlist.append(system.to_json())
         for obj in self.objlist:
+            with open('test.log', 'a') as f:
+                f.write('\n')
+                f.write(str(obj) + '\n')
+                f.closed
             objlist.append(obj.to_json())
 
         json_data = {
@@ -120,6 +124,8 @@ class Sector:
 
     @staticmethod
     def from_json(json_data):
+        from system import System
+        from ship import Ship
         height = json_data.get('height')
         width = json_data.get('width')
         x = json_data.get('x')
@@ -130,7 +136,8 @@ class Sector:
         systemlist = json_data.get('systemlist')
         objlist = json_data.get('objlist')
 
-        sector = Sector(name, x, y, sector_type, height, width, sysnames=sysnames)
+
+        sector = Sector(name, sector_type, x, y, height, width, sysnames=sysnames)
         for system in systemlist:
             new_system = System.from_json(system)
             new_system.sector = sector
