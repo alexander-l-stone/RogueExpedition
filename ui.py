@@ -2,6 +2,7 @@ import tdl
 import textwrap
 from system import *
 
+#TODO: Test this file
 class Panel:
     def __init__(self, screen_width, panel_height, msg_height, msg_width, msg_x):
         self.panel = tdl.Console(screen_width, panel_height)

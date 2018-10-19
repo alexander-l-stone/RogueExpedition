@@ -1,4 +1,4 @@
-#TODO: Load everything here from files not hard code
+#TODO Load everything here from files not hard code
 system_names = [
     'Centauri',
     'Orion',

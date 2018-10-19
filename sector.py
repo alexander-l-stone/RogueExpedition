@@ -5,6 +5,8 @@ import math
 from constants import *
 from generate import SystemGenerator
 
+#TODO: Test this file
+
 class Sector:
 
     def __init__(self, name, sector_type, x, y, width, height, sysnames={}):

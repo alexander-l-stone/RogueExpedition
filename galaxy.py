@@ -1,6 +1,7 @@
 from sector import *
 import copy
 #TODO: add seed
+#TODO test this file
 class Galaxy:
     def __init__(self):
         self.sectorlist = {}

@@ -6,6 +6,7 @@ import math
 from component import *
 from timer import Timer
 #TODO: Move UI stuff to Player
+#TODO: Test this file
 class Ship(GameObject):
 
     def __init__(self, char, color, x, y, name, model, size, timer, ui=None, componentlist=None, system=None, isPlayer=False, faction=None):

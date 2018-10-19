@@ -1,4 +1,5 @@
 from system import *
+#TODO Test the classes in this file
 #This is the base class for all ship components. This is for TYPE of component, not individual components
 class Component:
     def __init__(self, name, charstring, size, active=True, damaged=False):
@@ -21,7 +22,7 @@ class Component:
             'name' : name,
             'active' : active,
             'charstring' : char,
-            'damaged' : damaged,
+            'damaged' : self.damaged,
             'size' : size,
             'type' : 'component'
         }

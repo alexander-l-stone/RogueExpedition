@@ -5,6 +5,7 @@ from random import *
 from display import GameObject
 
 #Generate tag is legacy code
+#TODO: Test this file
 class System:
     def __init__(self, name, x, y, generate=True, sector=None, owner=None):
         self.name = name

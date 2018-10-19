@@ -1,6 +1,7 @@
 from system import *
 
 #TODO Figure out how Empires actually work. May require massive overhaul of existing code.
+#TODO Test this file
 
 class Empire:
     def __init__(self, name, red, green, blue):

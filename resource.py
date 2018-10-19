@@ -1,4 +1,5 @@
 #TODO: Add more resources
+#TODO: Test this file
 class Resource:
     def __init__(self, name, symbol):
         self.name = name

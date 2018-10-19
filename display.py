@@ -1,4 +1,5 @@
 #This is the basic object for moving and drawing game objects
+#TODO Test the classes in this file;
 class GameObject:
     def __init__(self, char, color, x, y):
         self.char = char
