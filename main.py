@@ -1,19 +1,20 @@
 import tdl
-from system import *
-from ship import *
-from display import *
-from sector import Sector
-from ui import *
-from component_list import *
+from source.system import *
+from source.ship import *
+from source.display import *
+from source.sector import Sector
+from source.ui import *
+from data.base.component_list import *
 import copy
-from galaxy import *
-from constants import *
-from player import Player
-from timer import Timer
-from menu import *
-from faction import *
+from source.galaxy import *
+from source.constants import *
+from source.player import Player
+from source.timer import Timer
+from source.menu import *
+from source.faction import *
 import math
-from action_manager import *
+from source.action_manager import *
+import pickle
 
 #TODO: Clean up this file and remove constants/import them from files
 
@@ -58,7 +59,7 @@ class Game:
             'w' : 'where',
             'W' : 'where'
             }
-# Y is down, X is Right
+        #Y is down, X is Right
         self.CENTERX = self.SCREEN_WIDTH//2
         self.CENTERY = self.SCREEN_HEIGHT//2
         self.system_names = {}
@@ -71,8 +72,8 @@ class Game:
         #FIXME: The menu's are both broken in the same way. Each menu has the others menu's options in it. No idea what is causing it
         exit = Option('exit', "Exit")
         new_game = Option('new', "New Game")
-        load_game = Option('blank', "Load Game")
-        save_game = Option('blank', "Save Game")
+        load_game = Option('load', "Load Game")
+        save_game = Option('save', "Save Game")
         options = Option('blank', "Options")
         self.main_menu.add_option(new_game)
         self.main_menu.add_option(load_game)
@@ -80,6 +81,16 @@ class Game:
         self.options_menu.add_option(save_game)
         self.options_menu.add_option(options)
         self.options_menu.add_option(exit)
+        # with open('menu.log', 'a') as f:
+        #     f.write("---\n")
+        #     f.write("Main Menu Contents: \n")
+        #     for option in self.main_menu.options:
+        #         f.write(option.name + "\n")
+        #     f.write("Options Menu Contents: \n")
+        #     for option in self.options_menu.options:
+        #         f.write(option.name + "\n")
+        #     f.write(str(self.main_menu == self.options_menu))
+        #     f.closed
         self.main_window = tdl.init(self.SCREEN_WIDTH, self.SCREEN_HEIGHT, title="Space", fullscreen = False)
         self.fov_recompute = True
         self.game_state = 'playing'
@@ -143,7 +154,7 @@ class Game:
         Ymir.moonlist.append(The_Wall)
         Terra_Prime.planetlist.append(Ymir)
         Ymir.system = Terra_Prime
-        Terra_Prime.hyperlimit = Ring('#', (50,0,0), 294, 'Hyperlimit', 'Terra Prime Hyperlimit')
+        Terra_Prime.hyperlimit = Ring('#', (255,100,100), 294, 'Hyperlimit', 'Terra Prime Hyperlimit')
         #Test_Wormhole = Wormhole('X', (200,66, 244), 250, Terra_Prime)
         #Test_Wormhole.x = 191
         #Test_Wormhole.y = 161
@@ -216,7 +227,7 @@ class Game:
         self.total_time_elapsed = 0
 
     def render_game(self):
-        if isinstance(self.player_ship.location, System):
+        if isinstance(self.player.ship.location, System):
             for drawx in range(0, self.SCREEN_WIDTH):
                 for drawy in range (0, self.SCREEN_HEIGHT):
                     rangetoship = math.pow(math.pow(drawx-self.CENTERX,2)+math.pow(drawy-self.CENTERY,2),1/2)
@@ -316,6 +327,7 @@ class Game:
                             attemptJump(self.player.ship, self.clock)
                         if action == 'debug':
                             with open('debug.txt', 'a') as f:
+                                f.write(self.player.ship.location)
                                 if isinstance(self.player.ship.location, System):
                                     f.write("---\n")
                                     f.write(self.player.ship.location.name + ": \n")
@@ -324,11 +336,16 @@ class Game:
                                             f.write(obj.name + ", radius: " + str(obj.radius) + ", at " + str(obj.x) + ", " + str(obj.y) +"\n")
                                         elif isinstance(obj, Ring):
                                             f.write(obj.name + ", radius: " + str(obj.radius)+ "\n")
-                                    f.write("Hyperlimit at " + str(player.ship.location.hyperlimit.radius) + "\n")
+                                    f.write("Hyperlimit at " + str(self.player.ship.location.hyperlimit.radius) + "\n")
                                 f.closed
                         if action == 'menu':
                             self.game_state = 'menu'
                             self.current_menu = self.options_menu
+                            with open('menu.log', 'a') as f:
+                                f.write("---\n")
+                                f.write("Game Menu Contents: \n")
+                                for option in self.current_menu.options:
+                                    f.write(option.name + "\n")
                             #(str(self.game_state))
                             self.fov_recompute = True
                         if action == 'where':
@@ -352,6 +369,11 @@ class Game:
                         #(option.name)
                         if option.name == 'blank':
                             pass
+                        elif option.name == 'save':
+                            self.save_game()
+                            self.current_menu.current_option = 0
+                            self.current_menu = None
+                            self.game_state = 'playing'
                         elif option.name == 'exit':
                             #("I got to the exit action")
                             # (main_game.current_menu.options)
@@ -374,9 +396,34 @@ class Game:
                 elif option.name == 'new':
                     self.game_state = 'playing'
                     return 'new'
+                elif option.name == 'load':
+                    self.load_game()
+                    self.game_state = 'playing'
+                    return 'load'
                 elif option.name == 'exit':
                     self.game_state = 'exit'
                     return 'exit'
+
+    def save_game(self):
+        data = {
+             'galaxy' : self.milky_way,
+             'player' : self.player,
+             'update_time' : self.time_since_last_update,
+             'time_elapsed' : self.total_time_elapsed
+             }
+        with open('saves/save_game.p', 'wb+') as save_file:
+            pickle.dump(data, save_file, pickle.HIGHEST_PROTOCOL)
+
+    def load_game(self):
+        with open('saves/save_game.p', 'rb') as save_file:
+            data = pickle.load(save_file)
+            self.milky_way = data['galaxy']
+            self.player = data['player']
+            self.time_since_last_update = data['update_time']
+            self.total_time_elapsed = data['time_elapsed']
+        print(self.milky_way)
+        print(self.player)
+
 #End of Game Class
 main_game = Game()
 #("I am before the menu")
@@ -386,6 +433,8 @@ menu_result = main_game.main_menu_loop()
 if menu_result == 'new':
     main_game.generate_galaxy()
     main_game.generate_player_ship()
+    main_game.main_loop()
+elif menu_result == 'load':
     main_game.main_loop()
 elif menu_result == 'exit':
     raise SystemExit('Window closed.')
