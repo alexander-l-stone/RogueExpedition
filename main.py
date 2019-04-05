@@ -1,20 +1,20 @@
 import tdl
-from system import *
-from ship import *
-from display import *
-from sector import Sector
-from ui import *
-from component_list import *
+from source.system import *
+from source.ship import *
+from source.display import *
+from source.sector import Sector
+from source.ui import *
+from data.base.component_list import *
 import copy
-from galaxy import *
-from constants import *
-from player import Player
-from timer import Timer
-from menu import *
-from faction import *
+from source.galaxy import *
+from source.constants import *
+from source.player import Player
+from source.timer import Timer
+from source.menu import *
+from source.faction import *
 import math
-from action_manager import *
-import json
+from source.action_manager import *
+import pickle
 
 #TODO: Clean up this file and remove constants/import them from files
 
@@ -227,7 +227,7 @@ class Game:
         self.total_time_elapsed = 0
 
     def render_game(self):
-        if isinstance(self.player_ship.location, System):
+        if isinstance(self.player.ship.location, System):
             for drawx in range(0, self.SCREEN_WIDTH):
                 for drawy in range (0, self.SCREEN_HEIGHT):
                     rangetoship = math.pow(math.pow(drawx-self.CENTERX,2)+math.pow(drawy-self.CENTERY,2),1/2)
@@ -336,7 +336,7 @@ class Game:
                                             f.write(obj.name + ", radius: " + str(obj.radius) + ", at " + str(obj.x) + ", " + str(obj.y) +"\n")
                                         elif isinstance(obj, Ring):
                                             f.write(obj.name + ", radius: " + str(obj.radius)+ "\n")
-                                    f.write("Hyperlimit at " + str(player.ship.location.hyperlimit.radius) + "\n")
+                                    f.write("Hyperlimit at " + str(self.player.ship.location.hyperlimit.radius) + "\n")
                                 f.closed
                         if action == 'menu':
                             self.game_state = 'menu'
@@ -397,7 +397,8 @@ class Game:
                     self.game_state = 'playing'
                     return 'new'
                 elif option.name == 'load':
-                    self.load_test()
+                    self.load_game()
+                    self.game_state = 'playing'
                     return 'load'
                 elif option.name == 'exit':
                     self.game_state = 'exit'
@@ -405,62 +406,23 @@ class Game:
 
     def save_game(self):
         data = {
-            'galaxy' : self.milky_way.to_json(),
-            'player' : self.player.to_json()
-            }
-        with open('save_game.json', 'w') as save_file:
-            json.dump(data, save_file, indent=4)
+             'galaxy' : self.milky_way,
+             'player' : self.player,
+             'update_time' : self.time_since_last_update,
+             'time_elapsed' : self.total_time_elapsed
+             }
+        with open('saves/save_game.p', 'wb+') as save_file:
+            pickle.dump(data, save_file, pickle.HIGHEST_PROTOCOL)
 
     def load_game(self):
-        with open('save_game.json') as save_file:
-            data = json.load(save_file)
-        self.milky_way = Galaxy.from_json(data['galaxy'])
-        self.game_state = 'playing'
-
-    def load_test(self):
-        with open('save_game.json') as test_file:
-            data = json.load(test_file)
-        test_galaxy = Galaxy.from_json(data['galaxy'])
-        #load factions
-        for faction in test_galaxy.factions:
-            newSystemList = []
-            for system in faction.claimed_systems:
-                systemList = system.split(':')
-                sectorCoordList = systemList[0].split(',')
-                sectorX = sectorCoordList[0]
-                sectorY = sectorCoordList[1]
-                sectorX = int(sectorX)
-                sectorY = int(sectorY)
-                systemName = sectorCoordList[1]
-                sectorCoord = (sectorX, sectorY)
-                actualSector = test_galaxy.sectorlist[sectorCoord]
-                for actualSystem in actualSector.systemlist:
-                    if actualSystem.name == systemName:
-                        newSystemList.append(actualSystem)
-                        break
-            faction.claimed_systems = newSystemList
-            with open('test.log', 'a') as f:
-                f.write(str(faction.claimed_systems) + '\n')
-                f.closed
-            newColonyList = []
-            for colony in faction.colonies:
-                colonyList = colony.planet.split(':')
-                systemName = colonyList[0]
-                colonyName = colonyList[1]
-                found = False
-                for factionSystem in faction.claimed_systems:
-                    if factionSystem.name == system_name:
-                        for planet in factionSystem.planetlist:
-                            if planet.name == colonyName:
-                                newColonyList.append(planet)
-                                found = True
-                                break
-                    if found:
-                        break
-            faction.colonies = newColonyList
-        with open('test_save.json', 'w') as save_file:
-            data = test_galaxy.to_json()
-            json.dump(data, save_file, indent=4)
+        with open('saves/save_game.p', 'rb') as save_file:
+            data = pickle.load(save_file)
+            self.milky_way = data['galaxy']
+            self.player = data['player']
+            self.time_since_last_update = data['update_time']
+            self.total_time_elapsed = data['time_elapsed']
+        print(self.milky_way)
+        print(self.player)
 
 #End of Game Class
 main_game = Game()
@@ -471,6 +433,8 @@ menu_result = main_game.main_menu_loop()
 if menu_result == 'new':
     main_game.generate_galaxy()
     main_game.generate_player_ship()
+    main_game.main_loop()
+elif menu_result == 'load':
     main_game.main_loop()
 elif menu_result == 'exit':
     raise SystemExit('Window closed.')
