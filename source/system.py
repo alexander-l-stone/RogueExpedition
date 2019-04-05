@@ -3,6 +3,7 @@ import math
 import random
 from random import *
 from .display import GameObject
+# from .generate import SystemGenerator
 
 #Generate tag is legacy code
 #TODO: Test this file
@@ -191,7 +192,6 @@ class Wormhole(GameObject):
             console.draw_char(self.x-topx, self.y-topy, ' ', bg=clearbg)
 
 
-#legacy code and currently unused.
 class SystemGenerator:
     def __init__(self):
         pass
@@ -421,19 +421,19 @@ class SystemGenerator:
             nummoons = 0
         moonname = ['A', 'B', 'C', 'D', 'E']
         if body.planet_type == 'Gas Giant' or body.planet_type == 'Liquid Giant':
-            moonradius = randrange(1,11)//2
+            moonradius = randrange(3,11)//2
         else:
-            moonradius = randrange(1,11)//3
+            moonradius = randrange(3,11)//3
         while nummoons > 0:
             random_angle = math.radians(randrange(0,360))
             if body.planet_type == 'Liquid Giant' or body.planet_type == 'Frozen':
                 moon = Planet('o', (randrange(0,150), randrange(100,255), randrange(255)), moonradius, int(moonradius*math.cos(random_angle)), int(moonradius*math.sin(random_angle)), 'Frozen',body.name + " " + moonname[5-nummoons])
                 body.moonlist.append(moon)
-                moonradius += randrange(1,11)
+                moonradius += randrange(3,11)
             elif body.planet_type == 'Hot' or body.planet_type == 'Greenhouse':
                 moon = Planet('o', (255, randrange(0,255), randrange(0,150)), moonradius, int(moonradius*math.cos(random_angle)), int(moonradius*math.sin(random_angle)), 'Hot', body.name + " " + moonname[5-nummoons])
                 body.moonlist.append(moon)
-                moonradius += randrange(1,6)
+                moonradius += randrange(3,8)
             else:
                 value = randrange(50,100)
                 moon = Planet('o', (value, value//2, 0), moonradius, int(moonradius*math.cos(random_angle)), int(moonradius*math.sin(random_angle)), 'Barren', body.name + " " + moonname[5-nummoons])
