@@ -6,7 +6,6 @@ ENV/
 .idea
 .DS_Store
 
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -115,3 +114,12 @@ venv.bak/
 
 # data
 curriculum/class-06/API_NY.GDP.PCAP.CD_DS2_en_csv_v2.csv
+
+# saves
+/saves
+
+#logs
+*.log
+
+#editor info
+.editorconfig
