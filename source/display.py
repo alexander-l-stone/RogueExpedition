@@ -18,3 +18,6 @@ class GameObject:
     def move(self, dx, dy):
         self.x += dx
         self.y += dy
+    
+    def onCollide(self, other, dx, dy):
+        return
