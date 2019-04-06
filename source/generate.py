@@ -1,6 +1,7 @@
 import random
 from random import *
 from .system import Star, System, Planet, Ring, Wormhole
+
 import math
 #FIXME: Put generators here when import errors are resolved
 #TODO: Test this file

@@ -4,7 +4,7 @@ from random import *
 import math
 from .constants import *
 from .generate import SystemGenerator
-
+from .name_generator import *
 #TODO: Test this file
 
 class Sector:
@@ -25,20 +25,19 @@ class Sector:
 
     def generate(self):
         if len(self.systemlist) == 0:
-            namenumber = randrange(0,len(system_names)-1)
-            name = system_names[namenumber]
+            name = generatePhoneticWord(defaultRules)
             new_x = randrange(self.x*self.width, (self.x+1)*self.width)
             new_y = randrange(self.y*self.height, (self.y+1)*self.height)
-            if system_names[namenumber] in self.sysnames:
+            if name in self.sysnames:
                 self.sysnames[name] += 1
             else:
                 self.sysnames[name] = 0
             if self.sysnames[name] < len(greek_numbers)-1:
-                new_system = System(greek_numbers[self.sysnames[name]] + " " + system_names[namenumber], new_x, new_y, generate=False, sector=self)
+                new_system = System(greek_numbers[self.sysnames[name]] + " " + name, new_x, new_y, generate=False, sector=self)
                 self.generator.generate(new_system)
                 self.systemlist.append(new_system)
             else:
-                new_system = System(str(system_names[namenumber]) + " " + str(self.sysnames[name]), new_x, new_y, generate=False, sector=self)
+                new_system = System(str(name) + " " + str(self.sysnames[name]), new_x, new_y, generate=False, sector=self)
                 self.generator.generate(new_system)
                 self.systemlist.append(new_system)
         numsystems = randrange(int(self.height*self.width*0.002), int(self.height*self.width*0.01))
@@ -52,19 +51,18 @@ class Sector:
                     empty = False
                     break
             if empty:
-                namenumber = randrange(0,len(system_names)-1)
-                name = system_names[namenumber]
+                name = generatePhoneticWord(defaultRules)
                 result = self.sysnames.get(name)
                 if result == None:
                     self.sysnames[name] = 0
                 else:
                     self.sysnames[name] += 1
                 if self.sysnames[name] < len(greek_numbers)-1:
-                    new_system = System(greek_numbers[self.sysnames[name]] + " " + system_names[namenumber], new_x, new_y, generate=False, sector=self)
+                    new_system = System(greek_numbers[self.sysnames[name]] + " " + name, new_x, new_y, generate=False, sector=self)
                     self.generator.generate(new_system)
                     self.systemlist.append(new_system)
                 else:
-                    new_system = System(str(system_names[namenumber]) + " " + str(self.sysnames[name]), new_x, new_y, generate=False, sector=self)
+                    new_system = System(str(name) + " " + str(self.sysnames[name]), new_x, new_y, generate=False, sector=self)
                     self.generator.generate(new_system)
                     self.systemlist.append(new_system)
                 i += 1
