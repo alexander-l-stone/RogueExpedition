@@ -40,7 +40,7 @@ class Timer:
         return (math.floor(self.minutes/60)%20)
 
     def get_weekday(self):
-        print(self.get_hour())
+        # print(self.get_hour())
         return (math.floor(self.minutes/1440)%7)
 
     def get_day(self):
