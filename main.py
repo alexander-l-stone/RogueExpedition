@@ -15,6 +15,7 @@ from source.faction import *
 import math
 from source.action_manager import *
 import pickle
+from source.station import Station
 
 #TODO: Clean up this file and remove constants/import them from files
 
@@ -171,6 +172,8 @@ class Game:
         terran_sector = Sector('Terran Sector', 'normal', 0, 0, self.SECTOR_WIDTH, self.SECTOR_HEIGHT, sysnames=self.system_names)
         terran_sector.systemlist.append(start_system)
         start_system.sector = terran_sector
+        debug_station = Station('S', (Terran_Coalition.red, Terran_Coalition.green, Terran_Coalition.blue), 1, 1, 'Prime Station', 'uranium-debug', system=New_Terra)
+        New_Terra.objlist.append(debug_station)
         self.system_names[terran_sector.name] = 1
         terran_sector.generate()
         self.milky_way.add_sector(terran_sector)
@@ -185,6 +188,7 @@ class Game:
         self.start_planet.objlist.append(self.player_ship)
         magellan_solar_1 = copy.copy(solar_panel_0)
         magellan_solar_2 = copy.copy(solar_panel_0)
+        magellan_reactor_1 = copy.copy(fission_reactor_1)
         magellan_battery_1 = copy.copy(battery_1)
         magellan_battery_2 = copy.copy(battery_1)
         magellan_battery_3 = copy.copy(battery_1)
@@ -200,6 +204,7 @@ class Game:
         magellan_drive_2 = copy.copy(basic_engine_0)
         self.player_ship.componentlist.append(magellan_solar_1)
         self.player_ship.componentlist.append(magellan_solar_2)
+        self.player_ship.componentlist.append(magellan_reactor_1)
         self.player_ship.componentlist.append(magellan_battery_1)
         self.player_ship.componentlist.append(magellan_battery_2)
         self.player_ship.componentlist.append(magellan_battery_3)

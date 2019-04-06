@@ -201,7 +201,7 @@ class SystemGenerator:
                 return
         else:
             if planet_zone == 'hot':
-                body = Planet('o', (randrange(50,150), randrange(200,255)), randrange(50,150), radius, int(radius*math.cos(random_angle)), int(radius*math.sin(random_angle)), 'Greenhouse', system.name + ' ' + str(i), system=system  )
+                body = Planet('o', (randrange(50,150), randrange(200,255), randrange(50,150)), radius, int(radius*math.cos(random_angle)), int(radius*math.sin(random_angle)), 'Greenhouse', system.name + ' ' + str(i), system=system  )
             elif planet_zone == 'bio':
                 body = Planet('0', (randrange(0,15), randrange(255), randrange(0,15)), radius, int(radius*math.cos(random_angle)), int(radius*math.sin(random_angle)), 'Super-Terran', system.name + ' ' + str(i), system=system  )
             elif planet_zone == 'cold':
