@@ -168,28 +168,30 @@ def generatePhoneticWord(rules):
     #print("last = " + str(last))
     #print("word = " + str(word))
     #print("\n")
-    for i in range(last + 1):
+    i = 0
+    while i < last:
         #pre = {}
         #offset = 1
         #while pre == {}:
         #    pre = word[i - 1] if i >= offset else '#'
         #    offset += 1
 
-        if i > last:
-            break
-
         pre = word[i - 1] if i <= 0 else '#'
         target = word[i]
         post = word[i + 1] if i < last else '#' 
 
+        restart = False
         for rule in rules:
             word[i] = rule.apply(pre, target, post)
             if word[i] == {}:
                 del word[i]
-                i -= 1
                 last -= 1
+                break
             #print('new value = ' + str(word[i]))
             #print("")
+        if restart:
+            continue
+        i += 1
 
     #print("processed word = " + str(word))
 
