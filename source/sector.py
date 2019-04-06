@@ -25,7 +25,7 @@ class Sector:
 
     def generate(self):
         if len(self.systemlist) == 0:
-            name = generatePhoneticWord(defaultRules)
+            name = generatePhoneticWord(defaultRules).capitalize()
             new_x = randrange(self.x*self.width, (self.x+1)*self.width)
             new_y = randrange(self.y*self.height, (self.y+1)*self.height)
             if name in self.sysnames:
@@ -51,7 +51,7 @@ class Sector:
                     empty = False
                     break
             if empty:
-                name = generatePhoneticWord(defaultRules)
+                name = generatePhoneticWord(defaultRules).capitalize()
                 result = self.sysnames.get(name)
                 if result == None:
                     self.sysnames[name] = 0
