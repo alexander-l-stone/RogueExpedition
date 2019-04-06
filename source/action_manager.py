@@ -108,13 +108,16 @@ def planetMove(ship, galaxy, dx, dy):
     #In the planet view the main planet is always at 0,0
     if ship.x+dx == 0 and ship.y+dy == 0:
         successful_move = False
-    #Dont crash into moons
-    else:
-        if len(ship.location.moonlist) > 0:
-            for moon in ship.location.moonlist:
-                if isinstance(moon, Planet):
-                    if moon.x == ship.x+dx and moon.y == ship.y + dy:
-                        successful_move = False
+    #check object list
+    if len(ship.location.objlist) > 0:
+        for obj in ship.location.objlist:
+            if (ship.x+dx == obj.x) and ( ship.y+dy == obj.y):
+                successful_move = obj.onCollide(ship, dx, dy)
+    if len(ship.location.moonlist) > 0:
+        for moon in ship.location.moonlist:
+            if isinstance(moon, Planet):
+                if moon.x == ship.x+dx and moon.y == ship.y + dy:
+                    successful_move = False
     #If you can move, move, if you move beyond the planet limit, return to the system view
     if successful_move:
         distance_from_planet = math.pow((math.pow(ship.x, 2)) + (math.pow(ship.y, 2)), 1/2.0)
