@@ -20,4 +20,4 @@ class GameObject:
         self.y += dy
     
     def onCollide(self, other, dx, dy):
-        return
+        return 'stop'

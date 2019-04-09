@@ -1,5 +1,5 @@
 import tdl
-from .display import GameObject
+from .newton import NewtonObject, Vector
 from .system import System, Planet
 from .sector import Sector
 import math
@@ -8,10 +8,10 @@ from .timer import Timer
 from .ui import Panel
 #TODO: Move UI stuff to Player
 #TODO: Test this file
-class Ship(GameObject):
+class Ship(NewtonObject):
 
-    def __init__(self, char, color, x, y, name, model, size, timer, ui=None, componentlist=None, system=None, isPlayer=False, faction=None):
-        GameObject.__init__(self, char, color, x, y)
+    def __init__(self, char, color, x, y, name, model, size, timer, vector=Vector(0,0), ui=None, componentlist=None, system=None, isPlayer=False, faction=None):
+        NewtonObject.__init__(self, char, color, x, y, vector)
         self.name = name
         self.model = model
         self.sensor_range = 1

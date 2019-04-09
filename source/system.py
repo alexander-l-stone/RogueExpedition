@@ -58,6 +58,9 @@ class Star(GameObject):
         self.stellar_type = stellar_type
         self.mass = mass
         self.explored = False
+    
+    def onCollide(self, other):
+        return "destroy"
 
 
 class Planet(GameObject):
@@ -101,6 +104,9 @@ class Planet(GameObject):
             moon.clear(console, topx, topy, sw, sh, clearbg=(0,0,0))
         for obj in self.objlist:
             obj.clear(console, topx, topy, sw, sh, clearbg=(0,0,0))
+        
+    def onCollide(self, other):
+        return "destroy"
 
 
 class Ring:
