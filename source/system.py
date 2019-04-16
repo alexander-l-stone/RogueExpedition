@@ -49,6 +49,12 @@ class System:
             for obj in self.objlist:
                 obj.clear(console, topx, topy, sw, sh)
         self.hyperlimit.clear(console, topx, topy, sw, sh)
+    
+    def onCollide(self, other):
+        return {
+            'result': "jump-in",
+            'target': self,
+        }
 
 
 class Star(GameObject):
@@ -60,7 +66,7 @@ class Star(GameObject):
         self.explored = False
     
     def onCollide(self, other):
-        return "destroy"
+        return {'result': "destroy",}
 
 
 class Planet(GameObject):
@@ -106,7 +112,12 @@ class Planet(GameObject):
             obj.clear(console, topx, topy, sw, sh, clearbg=(0,0,0))
         
     def onCollide(self, other):
-        return "destroy"
+        if isinstance(other.location, Planet):
+            return {'result': "destroy",}
+        else:
+            return {
+                'result': "planet-enter",
+                'target': self,}
 
 
 class Ring:

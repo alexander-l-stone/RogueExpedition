@@ -15,6 +15,7 @@ class NewtonObject(GameObject):
         for obj in location.objlist:
             if (new_x == obj.x) and (new_y == obj.y):
                 result = obj.onCollide(self)
+                break
         if isinstance(location, Sector) and result == None:
             for system in location.systemlist:
                 if (new_x == system.x) and (new_y == system.y):
@@ -24,13 +25,18 @@ class NewtonObject(GameObject):
             for planet in location.planetlist:
                 if (new_x == planet.x) and (new_y == system.y):
                     result = system.onCollide(self)
+                    break
         elif isinstance(location, Planet) and result == None:
             for moon in location.moonlist:
                 if (new_x == moon.x) and (new_y == moon.y):
                     result = system.onCollide(self)
+                    break
         if result == None:
-            result = 'move'
+            result = {'result': 'move'}
         return result
+
+    def getGhostPosition(self):
+        return (self.x+self.vector.dx, self.y+self.vector.dy)
 
 
 class Vector:
@@ -45,3 +51,6 @@ class Vector:
     def addPolar(self, radius, theta):
         self.dx = int(float(self.dx) + radius*math.cos(theta))
         self.dy = int(float(self.dy) + radius*math.sin(theta))
+
+    def getMagnitude(self):
+        return math.sqrt(self.dx*self.dx + self.dy*self.dy)

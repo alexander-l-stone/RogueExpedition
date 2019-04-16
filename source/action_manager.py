@@ -3,21 +3,75 @@ from .system import *
 from .sector import Sector
 #TODO: Comment this File Massively
 #This will move a ship if possible(returning True) otherwise it will return False
+
+#collision result list:
+#destroy: Destroys colliding object
+#jump-in: Moves from hyperspace to systemspace
+#planet-enter: Moves from systemspace to planetspace
+#move: You can move normally, moving on top of the object
+#uranium-debug: move next to the station and collect your debug uranium
+
 def attemptMove(ship, galaxy, dx, dy):
-    entering_planet = False
-    #Default Behavior if the ship is in BugLand
-    if ship.location == None:
-        ship.move(dx, dy)
-        return True
-    #Behavior inside a System
-    elif isinstance(ship.location, System):
-        return systemMove(ship, galaxy, dx, dy)
-    #This logic governs moving through planets. It is very similar(nearly identical) to the System Logic.
-    elif isinstance(ship.location, Planet):
-        return planetMove(ship, galaxy, dx, dy)
-    #Sector movement
-    elif isinstance(ship.location, Sector):
-        return sectorMove(ship, galaxy, dx, dy)
+    ship.vector.dx + dx
+    ship.vector.dy + dy
+    move_result = ship.move(ship.location)
+    if move_result['result'] == 'jump-in':
+        getEntryPosition(ship.x - move_result['target'].x, ship.y - move_result['target'].y, move_result['target'].hyperlimit.radius)
+        ship.location.objlist.remove(ship)
+        move_result['target'].objlist.append(ship)
+        ship.location = move_result['target']
+    elif move_result['result'] == 'planet-enter':
+        getEntryPosition(ship.x - move_result['target'].x, ship.y - move_result['target'].y, move_result['target'].radius)
+        ship.location.objlist.remove(ship)
+        move_result['target'].objlist.append(ship)
+        ship.location = move_result['target']
+def getExitVector(x, y):
+    dx = 0
+    dy = 0
+    angle = math.degrees(math.atan(y/x))
+    if (angle > 0+22.5) and (angle <= 90-22.5):
+        dx = 1
+        dy = 1
+    elif (angle > 90-22.5) and (angle <= 90+22.5):
+        dy = 1
+    elif (angle > 90+22.5) and (angle <= 180-22.5):
+        dx = -1
+        dy = 1
+    elif (angle > 180-22.5) and (angle <= 180+22.5):
+        dx = -1
+    elif (angle > 180+22.5) and (angle <= 270-22.5):
+        dx = -1
+        dy = -1
+    elif (angle > 270-22.5) and (angle <= 270+22.5):
+        dy = -1
+    elif (angle > 270+22.5) and (angle <= 360-22.5):
+        dx = 1
+        dy = -1
+    else:
+        dx = 1
+    return (dx, dy)
+
+def getEntryPosition(dx, dy, radius):
+    angle = 0
+    if (dx == 1) and (dy == 0):
+        angle = 0
+    elif (dx == 1) and (dy == 1):
+        angle = 45
+    elif (dx == 0) and (dy == 1):
+        angle = 90
+    elif (dx == -1) and (dy == 1):
+        angle = 135
+    elif (dx == -1) and (dy == 0):
+        angle = 180
+    elif (dx == -1) and (dy == -1):
+        angle = 225
+    elif (dx == 0) and (dy == -1):
+        angle = 270
+    elif (dx == 1) and (dy == -1):
+        angle = 315
+    x = angle*math.cos(radius)
+    y = angle*math.sin(radius)
+    return (x, y)
 
 #This governs the ship moving through the system level
 def systemMove(ship, galaxy, dx, dy):

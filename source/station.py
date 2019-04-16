@@ -9,12 +9,7 @@ class Station(GameObject):
     
     def onCollide(self, other, dx, dy):
         if self.type == 'uranium-debug':
-            if isinstance(other, Ship):
-                key = other.cargo_list.get('Uranium')
-                if key == None:
-                    other.cargo_list['Uranium'] = 30
-                else:
-                    other.cargo_list['Uranium'] = 30
-                    if other.player:
-                        other.ui.message('We refueled upto 30 Uranium at ' + self.name, 'engineering')
-        return False
+            if other.vector.getMagnitude() < 2:
+                return 'uranium-debug'
+            else:
+                return 'move'
