@@ -1,6 +1,7 @@
 #file for managing all the functions that govern actions
 from .system import *
 from .sector import Sector
+import sys
 #TODO: Comment this File Massively
 #This will move a ship if possible(returning True) otherwise it will return False
 
@@ -25,6 +26,35 @@ def attemptMove(ship, galaxy, dx, dy):
         ship.location.objlist.remove(ship)
         move_result['target'].objlist.append(ship)
         ship.location = move_result['target']
+    elif move_result['result'] == 'destroy':
+        print("You crashed.")
+        sys.exit(0)
+    elif move_result['result'] == 'uranium-debug':
+        dx = 0
+        dy = 0
+        if ship.x > move_result['target'].x:
+            dx = 1
+        elif ship.x < move_result['target'].x:
+            dx = -1
+        if ship.y > move_result['target'].y:
+            dy = 1
+        elif ship.y < move_result['target'].y:
+            dy = -1
+    elif move_result['result'] == 'move':
+        ship.x += ship.vector.dx
+        ship.y += ship.vector.dy
+        if isinstance(ship.location, Planet):
+            radius = math.sqrt(ship.x*ship.x + ship.y*ship.y)
+            if radius >= ship.location.radius:
+                vectors = getExitVector(ship.x, ship.y)
+                ship.x = ship.location.x + vectors[0]
+                ship.y = ship.location.y + vectors[1]
+                ship.location.objlist.remove(ship)
+                ship.location = ship.location.system
+                ship.location.objlist.append(ship)
+    
+        
+        
 def getExitVector(x, y):
     dx = 0
     dy = 0

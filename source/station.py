@@ -10,6 +10,7 @@ class Station(GameObject):
     def onCollide(self, other, dx, dy):
         if self.type == 'uranium-debug':
             if other.vector.getMagnitude() < 2:
-                return 'uranium-debug'
+                return {'result': 'uranium-debug',
+                        'target': self,}
             else:
-                return 'move'
+                return {'result': 'move'}
