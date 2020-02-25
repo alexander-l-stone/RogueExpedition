@@ -416,8 +416,12 @@ class Game:
              'update_time' : self.time_since_last_update,
              'time_elapsed' : self.total_time_elapsed
              }
-        with open('saves/save_game.p', 'wb+') as save_file:
-            pickle.dump(data, save_file, pickle.HIGHEST_PROTOCOL)
+        try:
+            with open('saves/save_game.p', 'wb+') as save_file:
+                pickle.dump(data, save_file, pickle.HIGHEST_PROTOCOL)
+        except FileNotFoundError:
+            with open('saves/save_game.p', 'ab+') as save_file:
+                pickle.dump(data, save_file, pickle.HIGHEST_PROTOCOL)
 
     def load_game(self):
         with open('saves/save_game.p', 'rb') as save_file:
