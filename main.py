@@ -58,7 +58,7 @@ class Game:
             'M' : 'menu',
             'm' : 'menu',
             'w' : 'where',
-            'W' : 'where'
+            'W' : 'where',
             }
         #Y is down, X is Right
         self.CENTERX = self.SCREEN_WIDTH//2
@@ -71,17 +71,19 @@ class Game:
         self.options_menu = Menu(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.main_menu = Menu(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         #FIXME: The menu's are both broken in the same way. Each menu has the others menu's options in it. No idea what is causing it
-        exit = Option('exit', "Exit")
+        exit_menu = Option('leave menu', "Leave Menu")
         new_game = Option('new', "New Game")
         load_game = Option('load', "Load Game")
         save_game = Option('save', "Save Game")
         options = Option('blank', "Options")
+        quit_game = Option('quit', 'Quit')
         self.main_menu.add_option(new_game)
         self.main_menu.add_option(load_game)
-        self.main_menu.add_option(exit)
+        self.main_menu.add_option(quit_game)
         self.options_menu.add_option(save_game)
         self.options_menu.add_option(options)
-        self.options_menu.add_option(exit)
+        self.options_menu.add_option(exit_menu)
+        self.options_menu.add_option(quit_game)
         # with open('menu.log', 'a') as f:
         #     f.write("---\n")
         #     f.write("Main Menu Contents: \n")
@@ -95,6 +97,7 @@ class Game:
         self.main_window = tdl.init(self.SCREEN_WIDTH, self.SCREEN_HEIGHT, title="Space", fullscreen = False)
         self.fov_recompute = True
         self.game_state = 'playing'
+        self.following = None
 
     def generate_galaxy(self):
 
@@ -230,45 +233,47 @@ class Game:
         self.player = Player(self.player_ship)
         self.time_since_last_update = 0
         self.total_time_elapsed = 0
+        self.following = self.player.ship
 
     def render_game(self):
-        if isinstance(self.player.ship.location, System):
+        if isinstance(self.following.location, System):
             for drawx in range(0, self.SCREEN_WIDTH):
                 for drawy in range (0, self.SCREEN_HEIGHT):
                     rangetoship = math.pow(math.pow(drawx-self.CENTERX,2)+math.pow(drawy-self.CENTERY,2),1/2)
-                    if rangetoship <= self.player.ship.sensor_range*5:
+                    if rangetoship <= self.following.sensor_range*5:
                         self.console.draw_char(drawx, drawy, ' ', bg=(15, 15, 15))
-            self.player.ship.location.draw(self.console, self.player.ship.x-self.CENTERX, self.player.ship.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
-        if isinstance(self.player.ship.location, Sector):
+            self.following.location.draw(self.console, self.following.x-self.CENTERX, self.following.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+        if isinstance(self.following.location, Sector):
             for drawx in range(0, self.SCREEN_WIDTH):
                 for drawy in range (0, self.SCREEN_HEIGHT):
                     rangetoship = math.pow(math.pow(drawx-self.CENTERX,2)+math.pow(drawy-self.CENTERY,2),1/2)
-                    if rangetoship <= self.player.ship.sensor_range:
+                    if rangetoship <= self.following.sensor_range:
                         self.console.draw_char(drawx, drawy, ' ', bg=(120, 0, 0))
                     else:
                         self.console.draw_char(drawx, drawy, ' ', bg=(60, 0, 0))
-            self.milky_way.sector_draw(self.player.ship.location, self.console, self.player.ship.x-self.CENTERX, self.player.ship.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
-        if isinstance(self.player.ship.location, Planet):
-            self.player.ship.location.planet_draw(self.console, self.player.ship.x - self.CENTERX, self.player.ship.y - self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
-        self.player.ship.draw(self.console, self.player.ship.x-self.CENTERX, self.player.ship.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+            self.milky_way.sector_draw(self.following.location, self.console, self.following.x-self.CENTERX, self.following.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+        if isinstance(self.following.location, Planet):
+            self.following.location.planet_draw(self.console, self.following.x - self.CENTERX, self.following.y - self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+        self.following.draw(self.console, self.following.x-self.CENTERX, self.following.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.render_clock()
         self.main_window.blit(self.console, 0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, 0, 0)
         self.ui.clear()
         self.ui.render_border()
-        self.ui.render_bar(self.SCREEN_WIDTH//2-self.BAR_WIDTH//2, 2, self.BAR_WIDTH, 'Energy', self.player.ship.current_power, self.player.ship.power_max, (255,255,0), (255,255,100))
-        self.ui.render_coordinates(self.SCREEN_WIDTH//2, 7, self.player.ship)
+        if(type(self.following) is Ship):
+            self.ui.render_bar(self.SCREEN_WIDTH//2-self.BAR_WIDTH//2, 2, self.BAR_WIDTH, 'Energy', self.following.current_power, self.following.power_max, (255,255,0), (255,255,100))
+        self.ui.render_coordinates(self.SCREEN_WIDTH//2, 7, self.following)
         self.ui.render_messages()
         self.main_window.blit(self.ui.panel,0, self.PANEL_Y, self.SCREEN_WIDTH, self.PANEL_HEIGHT, 0, 0)
         tdl.flush()
-        if isinstance(self.player.ship.location, System):
-            self.player.ship.location.clear(self.console, self.player.ship.x-self.CENTERX, self.player.ship.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
-        elif isinstance(self.player.ship.location, Sector):
-            self.milky_way.sector_clear(self.player.ship.location, self.console, self.player.ship.x-self.CENTERX, self.player.ship.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
-        elif isinstance(self.player.ship.location, Planet):
+        if isinstance(self.following.location, System):
+            self.following.location.clear(self.console, self.following.x-self.CENTERX, self.following.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+        elif isinstance(self.following.location, Sector):
+            self.milky_way.sector_clear(self.following.location, self.console, self.following.x-self.CENTERX, self.following.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+        elif isinstance(self.following.location, Planet):
             for drawx in range(0, self.SCREEN_WIDTH):
                 for drawy in range(0, self.SCREEN_HEIGHT):
                     self.console.draw_char(drawx, drawy, ' ', bg=(0, 0, 0))
-            self.player.ship.location.planet_clear(self.console, self.player.ship.x - self.CENTERX, self.player.ship.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+            self.following.location.planet_clear(self.console, self.following.x - self.CENTERX, self.following.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
 
     def render_clock(self):
         self.console.draw_rect(0, 0, self.SCREEN_WIDTH, 0, None, bg=(100,100,100))
@@ -288,7 +293,7 @@ class Game:
                         if self.player.ship.get_thrust() <= 0:
                             self.ui.message("We have no working engines.", 'engineering')
                         else:
-                            if attemptMove(self.player.ship, self.milky_way, key_x, key_y):
+                            if attemptMove(self.following, self.milky_way, key_x, key_y):
                                 x = False
                                 y = False
                                 time = 0
@@ -296,52 +301,53 @@ class Game:
                                     x = True
                                 if key_y == 1 or key_y == -1:
                                     y = True
-                                if isinstance(self.player.ship.location, Sector):
+                                if isinstance(self.following.location, Sector):
                                     if x and y:
-                                        time = int(self.find_time(self.player.ship.get_thrust(), math.sqrt(2), 1440))
+                                        time = int(self.find_time(self.following.get_thrust(), math.sqrt(2), 1440))
                                     else:
-                                        time = int(self.find_time(self.player.ship.get_thrust(), 1, 1440))
+                                        time = int(self.find_time(self.following.get_thrust(), 1, 1440))
                                 else:
                                     if x and y:
-                                        time = int(self.find_time(self.player.ship.get_thrust(), math.sqrt(2), 60))
+                                        time = int(self.find_time(self.following.get_thrust(), math.sqrt(2), 60))
                                     else:
-                                        time = int(self.find_time(self.player.ship.get_thrust(), 1, 60))
+                                        time = int(self.find_time(self.following.get_thrust(), 1, 60))
                                 self.clock.minutes += time
                                 self.time_since_last_update += time
                                 self.total_time_elapsed += time
-                                if isinstance(self.player.ship.location, System):
+                                if isinstance(self.following.location, System):
                                     while self.time_since_last_update >= 60:
-                                        self.player.ship.activate(self.ui)
+                                        self.following.activate(self.ui)
                                         self.time_since_last_update -= 60
-                                if isinstance(self.player.ship.location, Planet):
+                                if isinstance(self.following.location, Planet):
                                     while self.time_since_last_update >= 60:
-                                        self.player.ship.activate(self.ui)
+                                        self.following.activate(self.ui)
                                         self.time_since_last_update -= 60
-                                elif isinstance(self.player.ship.location, Sector):
+                                elif isinstance(self.following.location, Sector):
                                     while self.time_since_last_update >= 1440:
-                                        self.player.ship.activate(self.ui)
+                                        self.following.activate(self.ui)
                                         self.time_since_last_update -= 1440
-                                self.player.ship.current_clock.minutes = self.clock.minutes
+                                self.following.current_clock.minutes = self.clock.minutes
                             else:
                                 pass
-                        if isinstance(self.player.ship.location, System):
+                        if isinstance(self.following.location, System):
                             for drawx in range(0, self.SCREEN_WIDTH):
                                 for drawy in range(0, self.SCREEN_HEIGHT):
                                     self.console.draw_char(drawx, drawy, ' ', bg=(0,0,0))
                         if action == 'jump':
-                            attemptJump(self.player.ship, self.clock)
+                            if(type(self.following) is Ship):
+                                attemptJump(self.following, self.clock)
                         if action == 'debug':
                             with open('debug.txt', 'a') as f:
-                                f.write(self.player.ship.location)
-                                if isinstance(self.player.ship.location, System):
+                                f.write(self.following.location)
+                                if isinstance(self.following.location, System):
                                     f.write("---\n")
-                                    f.write(self.player.ship.location.name + ": \n")
-                                    for obj in self.player.ship.location.planetlist:
+                                    f.write(self.following.location.name + ": \n")
+                                    for obj in self.following.location.planetlist:
                                         if isinstance(obj, Planet):
                                             f.write(obj.name + ", radius: " + str(obj.radius) + ", at " + str(obj.x) + ", " + str(obj.y) +"\n")
                                         elif isinstance(obj, Ring):
                                             f.write(obj.name + ", radius: " + str(obj.radius)+ "\n")
-                                    f.write("Hyperlimit at " + str(self.player.ship.location.hyperlimit.radius) + "\n")
+                                    f.write("Hyperlimit at " + str(self.following.location.hyperlimit.radius) + "\n")
                                 f.closed
                         if action == 'menu':
                             self.game_state = 'menu'
@@ -354,7 +360,7 @@ class Game:
                             #(str(self.game_state))
                             self.fov_recompute = True
                         if action == 'where':
-                            self.ui.message(str(self.player.ship.location), 'comms')
+                            self.ui.message(str(self.following.location), 'comms')
                         if event.type == 'QUIT':
                             raise SystemExit('Window closed.')
             elif self.game_state == 'menu':
@@ -379,12 +385,17 @@ class Game:
                             self.current_menu.current_option = 0
                             self.current_menu = None
                             self.game_state = 'playing'
-                        elif option.name == 'exit':
+                        elif option.name == 'leave menu':
                             #("I got to the exit action")
                             # (main_game.current_menu.options)
                             self.current_menu.current_option = 0
                             self.current_menu = None
                             self.game_state = 'playing'
+                        elif option.name == 'quit':
+                            self.save_game()
+                            self.current_menu.current_option = 0
+                            self.current_menu = None
+                            raise SystemExit('Window closed.')
 
     def main_menu_loop(self):
         while not tdl.event.is_window_closed() and self.game_state == 'main_menu':
@@ -405,9 +416,9 @@ class Game:
                     self.load_game()
                     self.game_state = 'playing'
                     return 'load'
-                elif option.name == 'exit':
-                    self.game_state = 'exit'
-                    return 'exit'
+                elif option.name == 'quit':
+                    self.game_state = 'quit'
+                    return 'quit'
 
     def save_game(self):
         data = {
@@ -430,6 +441,7 @@ class Game:
             self.player = data['player']
             self.time_since_last_update = data['update_time']
             self.total_time_elapsed = data['time_elapsed']
+            self.following = self.player.ship
         print(self.milky_way)
         print(self.player)
 
@@ -445,5 +457,5 @@ if menu_result == 'new':
     main_game.main_loop()
 elif menu_result == 'load':
     main_game.main_loop()
-elif menu_result == 'exit':
+elif menu_result == 'quit':
     raise SystemExit('Window closed.')
