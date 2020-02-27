@@ -248,9 +248,9 @@ class SystemGenerator:
             nummoons = 0
         moonname = ['A', 'B', 'C', 'D', 'E']
         if body.planet_type == 'Gas Giant' or body.planet_type == 'Liquid Giant':
-            moonradius = randrange(3,11)//2
+            moonradius = randrange(6,22)//2
         else:
-            moonradius = randrange(3,11)//3
+            moonradius = randrange(9,21)//3
         while nummoons > 0:
             random_angle = math.radians(randrange(0,360))
             if body.planet_type == 'Liquid Giant' or body.planet_type == 'Frozen':
@@ -268,7 +268,7 @@ class SystemGenerator:
                 moonradius += randrange(3,8)
             nummoons -= 1
         if len(body.moonlist) < 1:
-            body.planet_limit = Ring('#', (255,255,255), randrange(5,11), 'Planetary Limit', body.name + " Limit")
+            body.planet_limit = Ring('#', (255,255,255), randrange(7,12), 'Planetary Limit', body.name + " Limit")
         elif len(body.moonlist) >= 1:
             last_moon = body.moonlist[-1]
-            body.planet_limit = Ring('#', (255,255,255), randrange(last_moon.radius + 2, last_moon.radius + 5), 'Planetary Limit', body.name + " Limit")
+            body.planet_limit = Ring('#', (255,255,255), randrange(last_moon.radius + 4, last_moon.radius + 5), 'Planetary Limit', body.name + " Limit")

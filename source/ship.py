@@ -110,5 +110,5 @@ class Ship(GameObject):
         for component in self.componentlist:
             if type(component) is Sensor:
                 for key in component.sensor_types:
-                    
+                    pass
 
