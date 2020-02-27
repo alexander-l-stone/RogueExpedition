@@ -104,3 +104,11 @@ class Ship(GameObject):
             if isinstance(component, Engine):
                 thrust += component.check_thrust(self.ui, self)
         return thrust/size
+    
+    def get_sensors(self):
+        results = []
+        for component in self.componentlist:
+            if type(component) is Sensor:
+                for key in component.sensor_types:
+                    
+

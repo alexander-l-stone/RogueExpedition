@@ -21,12 +21,12 @@ from source.station import Station
 
 class Game:
     def __init__(self):
-        self.SCREEN_WIDTH = 110
-        self.SCREEN_HEIGHT = 60
+        self.SCREEN_WIDTH = 100
+        self.SCREEN_HEIGHT = 70
         self.LIMIT_FPS = 20
         tdl.set_font('arial12x12.png', greyscale = True, altLayout = True)
         self.FOV_ALGO = 'Basic'
-        self.PANEL_HEIGHT = 12
+        self.PANEL_HEIGHT = 15
         self.BAR_WIDTH = 20
         self.PANEL_Y = self.SCREEN_HEIGHT-self.PANEL_HEIGHT
         self.MSG_X = 2
@@ -261,7 +261,7 @@ class Game:
         self.ui.render_border()
         if(type(self.following) is Ship):
             self.ui.render_bar(self.SCREEN_WIDTH//2-self.BAR_WIDTH//2, 2, self.BAR_WIDTH, 'Energy', self.following.current_power, self.following.power_max, (255,255,0), (255,255,100))
-        self.ui.render_coordinates(self.SCREEN_WIDTH//2, 7, self.following)
+        self.ui.render_coordinates(self.SCREEN_WIDTH//2, 4, self.following)
         self.ui.render_messages()
         self.main_window.blit(self.ui.panel,0, self.PANEL_Y, self.SCREEN_WIDTH, self.PANEL_HEIGHT, 0, 0)
         tdl.flush()

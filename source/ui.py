@@ -35,6 +35,11 @@ class Panel:
         elif isinstance(ship.location, Planet):
             type_message = str(ship.location.planet_type)
             self.panel.draw_str(center-len(type_message)//2, y+1, type_message, bg=None)
+    
+    def render_sensors(self, center, y, ship):
+        category_name = "Sensors:"
+        messages = ship.get_sensors()
+
 
     def clear(self):
         self.panel.clear(fg=(255,255,255), bg=(0,0,0))
@@ -75,7 +80,7 @@ class Panel:
                 self.msgs.append((line, (255,255,255)))
 
     def render_messages(self):
-        y = 4
+        y = 3
         self.panel.draw_str(self.msg_x, y, "Messages: ", bg=None, fg=(255,255,255))
         self.panel.draw_str(self.screen_width - self.msg_width - self.msg_x, y, "Messages: ", bg=None, fg=(255,255,255))
         y += 1

@@ -16,10 +16,11 @@ class Component:
 
 #Describes Sensors. Currently only stores sensor range. TODO: Add something to allow sensors to interact with ECM and Cloaks.
 class Sensor(Component):
-    def __init__(self, name, charstring, size, sensor_range, power_cost, active=True, damaged=False):
+    def __init__(self, name, charstring, size, sensor_range, power_cost, sensor_types, active=True, damaged=False):
         Component.__init__(self, name, charstring, size, active, damaged)
         self.sensor_range = sensor_range
         self.power_cost = power_cost
+        self.sensor_types = sensor_types
 
     #Sensors draw in power for their use.
     def activate(self, ship, ui):
