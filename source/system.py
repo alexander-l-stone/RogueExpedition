@@ -135,6 +135,18 @@ class Planet(GameObject):
             obj.clear(console, topx, topy, sw, sh, clearbg=(0,0,0))
     
     def get_sensor_info(self, sensor_scans):
+        results = []
+        nearby_objects = self.moonlist + self.objlist
+        # for each nearby object
+        for obj in nearby_objects:
+            # for each scan type
+            for key in sensor_scans:
+                # if the object has matching data
+                if obj.sensor_information[key]:
+                    # copy all the data of this type to results
+                    for i in range(len(obj.sensor_information[key])):
+                        results.append(obj.sensor_information[key][i])
+        return results
 
 
 class Ring:
@@ -174,6 +186,7 @@ class Wormhole(GameObject):
             self.system.system_objects.append(self)
         self.destination = destination
         self.sensor_information = {'gravity': {0: 'This object appears to a hole in space-time.'}}
+        self.name = """{system.name} > {destination.name}"""
 
     def generate_destination(self, galaxy, sector):
         randx = randrange(-10, +10)

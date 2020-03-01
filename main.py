@@ -263,6 +263,8 @@ class Game:
             self.ui.render_bar(self.SCREEN_WIDTH//2-self.BAR_WIDTH//2, 2, self.BAR_WIDTH, 'Energy', self.following.current_power, self.following.power_max, (255,255,0), (255,255,100))
         self.ui.render_coordinates(self.SCREEN_WIDTH//2, 4, self.following)
         self.ui.render_messages()
+        if(type(self.following) is Ship):
+            self.ui.render_sensors(self.SCREEN_WIDTH//2,7,self.following.run_sensors())
         self.main_window.blit(self.ui.panel,0, self.PANEL_Y, self.SCREEN_WIDTH, self.PANEL_HEIGHT, 0, 0)
         tdl.flush()
         if isinstance(self.following.location, System):
