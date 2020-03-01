@@ -106,10 +106,15 @@ class Ship(GameObject):
         return thrust/size
     
     def get_sensors(self):
-        results = []
+        results = {}
         for component in self.componentlist:
             if type(component) is Sensor:
-                results.append(component.sensor_types)
+                for key in component:
+                    if results[key]:
+                        if results[key] < component[key]:
+                            results[key] = component[key]
+                    else:
+                        results[key] = component[key]
         return results
     
     def run_sensors(self):
