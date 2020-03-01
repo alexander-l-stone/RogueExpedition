@@ -65,17 +65,16 @@ class System:
     def get_sensor_info(self, x, y, sensor_range, sensor_scans):
         results = []
         nearby_objects = self.get_all_in_sensor_range(x, y, sensor_range)
-        for scan in sensor_scans:
-            for key in scan:
-                if self.star.sensor_information[key]:
-                    for i in range(scan[key]):
-                        if (self.star.sensor_information[key][i]):
-                            results.append(self.star.sensor_information[key][i])
-                for obj in nearby_objects:
-                    if obj.sensor_information[key]:
-                        for i in range(scan[key]):
-                            if (obj.sensor_information[key][i]):
-                                results.append(obj.sensor_information[key][i])
+        nearby_objects.append(self.star)
+        # for each nearby object
+        for obj in nearby_objects:
+            # for each scan type
+            for key in sensor_scans:
+                # if the object has matching data
+                if obj.sensor_information[key]:
+                    # copy all the data of this type to results
+                    for i in range(len(obj.sensor_information[key])):
+                        results.append(obj.sensor_information[key][i])
         return results
 
 class Star(GameObject):
