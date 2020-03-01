@@ -16,7 +16,7 @@ solar_panel_1 = Reactor("Early Solar Panels", "--SP1--", 2, Solar, 0, 8, 0)
 
 cargo_bay = CargoBay("CargoBay", "H", 1, 10)
 
-radar_0 = Sensor("Primitive Radar", "RDR0", 5, 2, 5, {'thermal' : 1, 'electromagnetic': 1})
+radar_0 = Sensor("Primitive Radar", "RDR0", 5, 2, 5, {'thermal' : 1, 'electromagnetic': 1, 'optical': 2})
 
 armor = Component("Armor", "A", 1)
 

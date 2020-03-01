@@ -19,7 +19,6 @@ class System:
         self.system_objects = []
         self.objlist = []
         self.sector = sector
-        self.sensor_information = {}
         self.hyperlimit = Ring('#', (255, 100, 100), 5, 'hyperradius', self.name + ' Hyperlimit')
 
     def draw(self, console, topx, topy, sw, sh):
@@ -47,7 +46,37 @@ class System:
             for obj in self.objlist:
                 obj.clear(console, topx, topy, sw, sh)
         self.hyperlimit.clear(console, topx, topy, sw, sh)
+    
+    def get_all_in_sensor_range(self, x, y, sensor_range):
+        result = []
+        result += self.get_from_list_in_range(x, y, sensor_range, self.planetlist)
+        result += self.get_from_list_in_range(x, y, sensor_range, self.system_objects)
+        result += self.get_from_list_in_range(x, y, sensor_range, self.objlist)
+        return result
 
+
+    def get_from_list_in_range(self, x, y, sensor_range, itemlist):
+        result = []
+        for item in itemlist:
+            if math.sqrt((x-item.x)**2+(y-item.y)**2) <= sensor_range:
+                result.append()
+        return result
+    
+    def get_sensor_info(self, x, y, sensor_range, sensor_scans):
+        results = []
+        nearby_objects = self.get_all_in_sensor_range(x, y, sensor_range)
+        for scan in sensor_scans:
+            for key in scan:
+                if self.star.sensor_information[key]:
+                    for i in range(scan[key]):
+                        if (self.star.sensor_information[key][i]):
+                            results.append(self.star.sensor_information[key][i])
+                for obj in nearby_objects:
+                    if obj.sensor_information[key]:
+                        for i in range(scan[key]):
+                            if (obj.sensor_information[key][i]):
+                                results.append(obj.sensor_information[key][i])
+        return results
 
 class Star(GameObject):
     def __init__(self, char, color, x, y, name, stellar_type, mass):
@@ -105,6 +134,8 @@ class Planet(GameObject):
             moon.clear(console, topx, topy, sw, sh, clearbg=(0,0,0))
         for obj in self.objlist:
             obj.clear(console, topx, topy, sw, sh, clearbg=(0,0,0))
+    
+    def get_sensor_info(self, sensor_scans):
 
 
 class Ring:
@@ -143,6 +174,7 @@ class Wormhole(GameObject):
         if not self.system == None:
             self.system.system_objects.append(self)
         self.destination = destination
+        self.sensor_information = {'gravity': {0: 'This object appears to a hole in space-time.'}}
 
     def generate_destination(self, galaxy, sector):
         randx = randrange(-10, +10)

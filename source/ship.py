@@ -109,6 +109,14 @@ class Ship(GameObject):
         results = []
         for component in self.componentlist:
             if type(component) is Sensor:
-                for key in component.sensor_types:
-                    pass
+                results.append(component.sensor_types)
+        return results
+    
+    def run_sensors(self):
+        if type(self.location) == Sector:
+            return
+        elif type(self.location) == System:
+            return self.location.get_sensor_info(self.x, self.y, self.sensor_range, self.get_sensors())
+        elif type(self.location) == Planet:
+
 
