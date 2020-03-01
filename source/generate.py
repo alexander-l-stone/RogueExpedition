@@ -275,7 +275,7 @@ class SystemGenerator:
             last_moon = body.moonlist[-1]
             body.planet_limit = Ring('#', (255,255,255), randrange(last_moon.radius + 4, last_moon.radius + 5), 'Planetary Limit', body.name + " Limit")
             #append sensor information to the planet
-            if len(body.moonlist == 1):
+            if len(body.moonlist) == 1:
                 body.sensor_information['optical'] = {0:'This planet has 1 moon'}
             else:
                 body.sensor_information['optical'] = {0:"""This planet has {len(body.moonlist)} moons"""}

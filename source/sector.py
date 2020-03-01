@@ -22,6 +22,7 @@ class Sector:
         self.sysnames = sysnames
         self.objlist = []
         self.generator = SystemGenerator()
+        self.sensor_information = {}
 
     def generate(self):
         if len(self.systemlist) == 0:
@@ -89,3 +90,6 @@ class Sector:
                 console.draw_char(system.x-topx, system.y-topy, ' ')
         for obj in self.objlist:
             obj.draw(console, topx, topy, sw, sh)
+
+    def get_sensor_info(self, sensor_scans):
+        return ["You are in hyperspace."]

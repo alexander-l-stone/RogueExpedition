@@ -6,6 +6,7 @@ class Station(GameObject):
         GameObject.__init__(self, char, color, x, y)
         self.name = name
         self.type = station_type
+        self.sensor_information = {}
     
     def onCollide(self, other, dx, dy):
         if self.type == 'uranium-debug':

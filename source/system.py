@@ -58,8 +58,9 @@ class System:
     def get_from_list_in_range(self, x, y, sensor_range, itemlist):
         result = []
         for item in itemlist:
-            if math.sqrt((x-item.x)**2+(y-item.y)**2) <= sensor_range:
-                result.append()
+            if(not isinstance(item, Ring)):
+                if math.sqrt((x-item.x)**2+(y-item.y)**2) <= sensor_range:
+                    result.append(item)
         return result
     
     def get_sensor_info(self, x, y, sensor_range, sensor_scans):
@@ -71,10 +72,11 @@ class System:
             # for each scan type
             for key in sensor_scans:
                 # if the object has matching data
-                if obj.sensor_information[key]:
+                if key in obj.sensor_information:
                     # copy all the data of this type to results
                     for i in range(len(obj.sensor_information[key])):
-                        results.append(obj.sensor_information[key][i])
+                        if i in obj.sensor_information[key]:
+                            results.append(obj.sensor_information[key][i])
         return results
 
 class Star(GameObject):
@@ -142,10 +144,11 @@ class Planet(GameObject):
             # for each scan type
             for key in sensor_scans:
                 # if the object has matching data
-                if obj.sensor_information[key]:
+                if key in obj.sensor_information:
                     # copy all the data of this type to results
                     for i in range(len(obj.sensor_information[key])):
-                        results.append(obj.sensor_information[key][i])
+                        if i in obj.sensor_information[key]:
+                            results.append(obj.sensor_information[key][i])
         return results
 
 
@@ -158,6 +161,7 @@ class Ring:
         self.planet_type = ring_type
         self.explored = False
         self.moonlist = []
+        self.sensor_information = {}
 
     def draw(self, console, topx, topy, sw, sh):
         for theta in range(0,360):

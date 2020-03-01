@@ -37,12 +37,16 @@ class Panel:
             self.panel.draw_str(center-len(type_message)//2, y+1, type_message, bg=None)
     
     def render_sensors(self, center, y, sensor_data):
-        if(len(sensor_data) < 1){
+        if (sensor_data == None):
             return
-        }
+        print(sensor_data)
+        if(len(sensor_data) < 1):
+            return
         self.panel.draw_str(center-len("Sensors:")//2, y, "Sensors:", bg=None)
+        listy = y
         for item in sensor_data:
-            self.panel.draw_str(center-len(item) //2, y+1, item, bg=None)
+            listy += 1
+            self.panel.draw_str(center-len(item) //2, listy, item, bg=None)
 
     def clear(self):
         self.panel.clear(fg=(255,255,255), bg=(0,0,0))

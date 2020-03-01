@@ -259,11 +259,11 @@ class Game:
         self.main_window.blit(self.console, 0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, 0, 0)
         self.ui.clear()
         self.ui.render_border()
-        if(type(self.following) is Ship):
+        if(isinstance(self.following, Ship)):
             self.ui.render_bar(self.SCREEN_WIDTH//2-self.BAR_WIDTH//2, 2, self.BAR_WIDTH, 'Energy', self.following.current_power, self.following.power_max, (255,255,0), (255,255,100))
         self.ui.render_coordinates(self.SCREEN_WIDTH//2, 4, self.following)
         self.ui.render_messages()
-        if(type(self.following) is Ship):
+        if(isinstance(self.following, Ship)):
             self.ui.render_sensors(self.SCREEN_WIDTH//2,7,self.following.run_sensors())
         self.main_window.blit(self.ui.panel,0, self.PANEL_Y, self.SCREEN_WIDTH, self.PANEL_HEIGHT, 0, 0)
         tdl.flush()
@@ -336,7 +336,7 @@ class Game:
                                 for drawy in range(0, self.SCREEN_HEIGHT):
                                     self.console.draw_char(drawx, drawy, ' ', bg=(0,0,0))
                         if action == 'jump':
-                            if(type(self.following) is Ship):
+                            if(isinstance(self.following, Ship)):
                                 attemptJump(self.following, self.clock)
                         if action == 'debug':
                             with open('debug.txt', 'a') as f:
