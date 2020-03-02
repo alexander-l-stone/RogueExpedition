@@ -39,7 +39,6 @@ class Panel:
     def render_sensors(self, center, y, sensor_data):
         if (sensor_data == None):
             return
-        print(sensor_data)
         if(len(sensor_data) < 1):
             return
         self.panel.draw_str(center-len("Sensors:")//2, y, "Sensors:", bg=None)

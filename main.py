@@ -240,7 +240,7 @@ class Game:
             for drawx in range(0, self.SCREEN_WIDTH):
                 for drawy in range (0, self.SCREEN_HEIGHT):
                     rangetoship = math.pow(math.pow(drawx-self.CENTERX,2)+math.pow(drawy-self.CENTERY,2),1/2)
-                    if rangetoship <= self.following.sensor_range*5:
+                    if rangetoship <= self.following.sensor_range:
                         self.console.draw_char(drawx, drawy, ' ', bg=(15, 15, 15))
             self.following.location.draw(self.console, self.following.x-self.CENTERX, self.following.y-self.CENTERY, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         if isinstance(self.following.location, Sector):
