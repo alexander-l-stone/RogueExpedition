@@ -45,6 +45,7 @@ class Ship(GameObject):
             self.ui = Panel(100,100,20,20, 50)
         self.alert = 'green'
         self.current_clock = Timer(minutes=timer.minutes)
+        self.sensor_information = {}
 
     def calculate_statistics(self):
         self.power_max = 0
@@ -104,3 +105,24 @@ class Ship(GameObject):
             if isinstance(component, Engine):
                 thrust += component.check_thrust(self.ui, self)
         return thrust/size
+    
+    def get_sensors(self):
+        results = {}
+        for component in self.componentlist:
+            if type(component) is Sensor:
+                for key in component.sensor_types:
+                    if key in results:
+                        if results[key] < component.sensor_types[key]:
+                            results[key] = component.sensor_types[key]
+                    else:
+                        results[key] = component.sensor_types[key]
+        return results
+    
+    def run_sensors(self):
+        if type(self.location) == Sector:
+            self.location.get_sensor_info(self.get_sensors())
+        elif type(self.location) == System:
+            return self.location.get_sensor_info(self.x, self.y, self.sensor_range, self.get_sensors())
+        elif type(self.location) == Planet:
+            return self.location.get_sensor_info(self.get_sensors())
+
